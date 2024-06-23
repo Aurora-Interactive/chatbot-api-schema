@@ -676,7 +676,7 @@ components:
       properties:
         role:
           type: string
-          enum: ["system", "user", "assistant"] # only these values are acceptable in ollama API
+          enum: ["system", "user", "assistant"]
         content:
           type: string
 
