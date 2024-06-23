@@ -40,7 +40,7 @@ paths:
                 properties:
                   success:
                     type: boolean
-                    enum: [true] # always true when authentication succeeds
+                    const: true
                   accessToken:
                     type: string
 
@@ -115,7 +115,7 @@ paths:
                     properties:
                       success:
                         type: boolean
-                        enum: [true]
+                        const: true
 
         "400":
           description: "Bad request"
@@ -161,7 +161,7 @@ paths:
                     properties:
                       success:
                         type: boolean
-                        enum: [true]
+                        const: true
 
         "400":
           description: "Bad request"
@@ -213,7 +213,7 @@ paths:
                 properties:
                   success:
                     type: boolean
-                    enum: [true]
+                    const: true
 
         "400":
           description: "Bad request"
@@ -267,7 +267,7 @@ paths:
                 properties:
                   success:
                     type: boolean
-                    enum: [true]
+                    const: true
 
         "400":
           description: "Bad request"
@@ -322,7 +322,7 @@ paths:
                     properties:
                       success:
                         type: boolean
-                        enum: [false]
+                        const: false
                       error:
                         type: string
                         enum: ["Invalid chat ID"]
@@ -375,7 +375,7 @@ paths:
                     properties:
                       success:
                         type: boolean
-                        enum: [false]
+                        const: false
                       error:
                         type: string
                         enum: ["Invalid chat ID"]
@@ -433,7 +433,7 @@ paths:
                 properties:
                   success:
                     type: boolean
-                    enum: [true]
+                    const: true
                   characterId:
                     type: integer
                     format: uint32
@@ -498,7 +498,7 @@ paths:
                       properties:
                         done:
                           type: boolean
-                          enum: [false]
+                          const: false
                   - type: object
                     properties:
                       timestamp:
@@ -506,7 +506,7 @@ paths:
                         format: int64
                       done:
                         type: boolean
-                        enum: [true]
+                        const: true
 
         "400":
           description: "Bad request"
@@ -519,7 +519,7 @@ paths:
                     properties:
                       success:
                         type: boolean
-                        enum: [false]
+                        const: false
                       error:
                         type: string
                         enum: ["Invalid chat ID"]
@@ -561,7 +561,7 @@ paths:
                 properties:
                   success:
                     type: boolean
-                    enum: [true]
+                    const: true
 
         "400":
           description: "Bad request"
@@ -574,7 +574,7 @@ paths:
                     properties:
                       success:
                         type: boolean
-                        enum: [false]
+                        const: false
                       error:
                         type: string
                         enum: ["Invalid chat ID"]
@@ -635,7 +635,7 @@ components:
       properties:
         success:
           type: boolean
-          enum: [false]
+          const: false
         error:
           type: string
           enum: ["Chat or message does not belong to this user"]
@@ -646,7 +646,7 @@ components:
       properties:
         success:
           type: boolean
-          enum: [false]
+          const: false
         error:
           type: string
           enum: ["Account associated with this access token is not subscribed to a paid plan"]
@@ -657,7 +657,7 @@ components:
       properties:
         success:
           type: boolean
-          enum: [false] # always false when authentication fails
+          const: false
         error:
           type: string
           enum: ["Invalid username, password, or access token"]
@@ -668,7 +668,7 @@ components:
       properties:
         success:
           type: boolean
-          enum: [false] # always false when authentication fails
+          const: false
         error:
           type: string
           enum: ["One or more API parameters are malformed. Please check your request and try again"]
