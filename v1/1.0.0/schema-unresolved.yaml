@@ -674,10 +674,16 @@ components:
       properties:
         characterIcon:
           type: string
-          format: image/avif,base64
+          format: byte
+          description: "base64-encode AVIF image data"
+          examples:
+            - "data:image/avif;base64,AAABAAEAAAAAAAEACAA"
         characterBanner:
           type: string
-          format: image/avif,base64
+          format: byte
+          description: "base64-encode AVIF image data"
+          examples:
+            - "data:image/avif;base64,AAABAAEAAAAAAAEACAA"
 
     CharacterAiInitializationData:
       type: object
