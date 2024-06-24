@@ -10,7 +10,7 @@ info:
 servers:
   - url: "/api/v1"
     description: "API version 1"
-  
+
 paths:
   /api/v1/login:
     post:
@@ -193,7 +193,9 @@ paths:
                   type: string
                 characterId:
                   type: integer
-                  format: uint32
+                  format: int32
+                  minimum: 0
+                  maximum: 4294967295
 
       responses:
         "200":
@@ -242,7 +244,9 @@ paths:
                       type: string
                     chatId:
                       type: integer
-                      format: uint32
+                      format: int32
+                      minimum: 0
+                      maximum: 4294967295
                 - $ref: "#/components/schemas/ChatMessage"
 
       responses:
@@ -410,7 +414,9 @@ paths:
                     const: true
                   characterId:
                     type: integer
-                    format: uint32
+                    format: int32
+                    minimum: 0
+                    maximum: 4294967295
 
         "400":
           description: "Bad request"
@@ -450,7 +456,9 @@ paths:
                   type: string
                 chatId:
                   type: integer
-                  format: uint32
+                  format: int32
+                  minimum: 0
+                  maximum: 4294967295
                 message:
                   type: string
                 context:
@@ -563,7 +571,9 @@ components:
       required: true
       schema:
         type: integer
-        format: uint32
+        format: int32
+        minimum: 0
+        maximum: 4294967295
 
     ChatId:
       name: "chatId"
@@ -571,7 +581,9 @@ components:
       required: true
       schema:
         type: integer
-        format: uint32
+        format: int32
+        minimum: 0
+        maximum: 4294967295
 
     AccessToken:
       name: "accessToken"
@@ -586,7 +598,9 @@ components:
       required: true
       schema:
         type: integer
-        format: uint32
+        format: int32
+        minimum: 0
+        maximum: 4294967295
 
   schemas:
     UnauthorizedIdResponse:
@@ -645,7 +659,9 @@ components:
       properties:
         id:
           type: integer
-          format: uint32
+          format: int32
+          minimum: 0
+          maximum: 4294967295
         name:
           type: string
         description:
@@ -676,7 +692,7 @@ components:
       properties:
         role:
           type: string
-          enum: ["system", "user", "assistant"]
+          enum: ["system", "user", "assistant"] # only these values are acceptable in ollama API
         content:
           type: string
 
