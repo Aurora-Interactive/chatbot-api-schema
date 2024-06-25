@@ -8,7 +8,7 @@ info:
     email: "bdpaboi123@gmail.com"
 
 paths:
-  /api/v1/login:
+  /api/v2/login:
     post:
       summary: "Username and password login"
       description: "Login and retrieve a reusable access token for use with the rest of the API"
@@ -52,9 +52,50 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/AuthenticationFailedResponse"       
+                $ref: "#/components/schemas/AuthenticationFailedResponse"
 
-  /api/v1/allCharacters:
+  /api/v2/signup:
+    post:
+      summary: "User signup"
+      description: "Create a user account"
+      operationId: "signup"
+      tags: ["Users"]
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              required: ["username", "email", "password"]
+              properties:
+                username:
+                  type: string
+                email:
+                  type: string
+                password:
+                  type: string
+
+      responses:
+        "200":
+          description: "Access token to be used with the rest of the API"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SuccessfulAccessTokenResponse"
+
+        "401":
+          description: "Username or email already in use"
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: "#/components/schemas/GuaranteedFailBool"
+                  - type: object
+                    properties:
+                      error:
+                        type: string
+                        enum: ["Username or email already in use"]
+
+  /api/v2/allCharacters:
     get:
       summary: "Character metadata"
       description: "Return metadata for all the available characters in the system"
@@ -93,7 +134,7 @@ paths:
               schema:
                 $ref: "#/components/schemas/AuthenticationFailedResponse"  
 
-  /api/v1/characterImageData:
+  /api/v2/characterImageData:
     get:
       summary: "Character image visuals"
       description: "Get the banner and profile icon that is assigned to a given character"
@@ -135,7 +176,7 @@ paths:
               schema:
                 $ref: "#/components/schemas/AccountInBadStandingResponse"
 
-  /api/v1/characterAiInitializationData:
+  /api/v2/characterAiInitializationData:
     get:
       summary: "Character AI initialization data"
       description: "Get the context prompt and initial message that is associated with the given character"
@@ -177,7 +218,7 @@ paths:
               schema:
                 $ref: "#/components/schemas/AccountInBadStandingResponse"
 
-  /api/v1/initializeChat:
+  /api/v2/initializeChat:
     post:
       summary: "Initialize chat with AI character"
       description: "Initialize a chat with a given AI character. NOTE: This endpoint doesn't store the initial message in the initialization data. You would still need to store the message using standard methods in this API, with the role as `system` and the message contents the same as the initialization data."
@@ -228,7 +269,7 @@ paths:
               schema:
                 $ref: "#/components/schemas/AccountInBadStandingResponse"
 
-  /api/v1/saveChatMessage:
+  /api/v2/saveChatMessage:
     post:
       summary: "Save chat message"
       description: "Save chat message either from the initial context prompt or after AI generation"
@@ -281,7 +322,7 @@ paths:
               schema:
                 $ref: "#/components/schemas/AccountInBadStandingResponse"
 
-  /api/v1/getFullChatHistory:
+  /api/v2/getFullChatHistory:
     get:
       summary: "Get full chat history"
       description: "Get all of the messages sent in a given chat"
@@ -334,7 +375,7 @@ paths:
               schema:
                 $ref: "#/components/schemas/AccountInBadStandingResponse"
 
-  /api/v1/getChatContext:
+  /api/v2/getChatContext:
     get:
       summary: "Get chat context"
       description: "Get all the messages from a given chat that are allocated to be used as AI model context. Almost always less messages than full chat history for performance reasons when running against our AI model."
@@ -387,7 +428,7 @@ paths:
               schema:
                 $ref: "#/components/schemas/AccountInBadStandingResponse"
 
-  /api/v1/createCharacter:
+  /api/v2/createCharacter:
     post:
       summary: "Create character"
       description: "Upload character data to our system"
@@ -454,7 +495,7 @@ paths:
               schema:
                 $ref: "#/components/schemas/AccountInBadStandingResponse"
 
-  /api/v1/sendMessage:
+  /api/v2/sendMessage:
     post:
       summary: "Send message"
       description: "Send a chat message to a particular chat for a response"
@@ -536,7 +577,7 @@ paths:
               schema:
                 $ref: "#/components/schemas/AccountInBadStandingResponse"
 
-  /api/v1/deleteMessage:
+  /api/v2/deleteMessage:
     delete:
       summary: "Delete message"
       description: "Remove message from chat log in a given chat"
@@ -672,6 +713,14 @@ components:
         error:
           type: string
           enum: ["Invalid chat ID"]
+
+    SuccessfulAccessTokenResponse:
+      allOf:
+        - $ref: "#/components/schemas/GuaranteedSuccessBool"
+        - type: object
+          properties:
+            accessToken:
+              type: string
 
     CharacterOverview:
       type: object
