@@ -1,6 +1,6 @@
 openapi: 3.1.0
 info:
-  version: 2.2.1
+  version: 2.3.0
   title: "AI Chatbot REST API"
   description: "AI Chatbot REST API used in storing and executing AI chat completions in a personalized and conversational manner. It comes with support for streaming chat responses."
   contact:
@@ -486,7 +486,16 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/InvalidRequestResponse"
+                oneOf:
+                  - $ref: "#/components/schemas/InvalidRequestResponse"
+                  - type: object
+                    properties:
+                      success:
+                        type: boolean
+                        const: false
+                      error:
+                        type: string
+                        enum: ["Character with this name already exists"]
 
         "401":
           description: "Unauthorized"
@@ -749,12 +758,10 @@ components:
       properties:
         iconImage:
           type: string
-          format: byte
           description: "base64-encoded AVIF image data"
           examples: ["data:image/avif;base64,AAABAAEAAAAAAAEACAA"]
         bannerImage:
           type: string
-          format: byte
           description: "base64-encoded AVIF image data"
           examples: ["data:image/avif;base64,AAABAAEAAAAAAAEACAA"]
 
