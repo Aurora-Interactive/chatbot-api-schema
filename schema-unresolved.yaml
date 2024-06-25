@@ -1,6 +1,6 @@
 openapi: 3.1.0
 info:
-  version: 1.0.1
+  version: 1.0.2
   title: "AI Chatbot REST API"
   description: "AI Chatbot REST API used in storing and executing AI chat completions in a personalized and conversational manner. It comes with support for streaming chat responses."
   contact:
@@ -77,9 +77,14 @@ paths:
           content:
             application/json:
               schema:
-                type: array
-                items:
-                  $ref: "#/components/schemas/CharacterOverview"
+                allOf:
+                  - $ref: "#/components/schemas/GuaranteedSuccessBool"
+                  - type: object
+                    properties:
+                      characters:
+                        type: array
+                        items:
+                          $ref: "#/components/schemas/CharacterOverview"
 
         "400":
           description: "Bad request"
@@ -306,9 +311,14 @@ paths:
           content:
             application/json:
               schema:
-                type: array
-                items:
-                  $ref: "#/components/schemas/ChatMessage"
+                allOf:
+                  - $ref: "#/components/schemas/GuaranteedSuccessBool"
+                  - type: object
+                    properties:
+                      chatHistory:
+                        type: array
+                        items:
+                          $ref: "#/components/schemas/ChatMessage"
 
         "400":
           description: "Bad request"
@@ -354,9 +364,14 @@ paths:
           content:
             application/json:
               schema:
-                type: array
-                items:
-                  $ref: "#/components/schemas/ChatMessage"
+                allOf:
+                  - $ref: "#/components/schemas/GuaranteedSuccessBool"
+                  - type: object
+                    properties:
+                      chatContext:
+                        type: array
+                        items:
+                          $ref: "#/components/schemas/ChatMessage"
 
         "400":
           description: "Bad request"
@@ -425,16 +440,15 @@ paths:
           content:
             application/json:
               schema:
-                type: object
-                properties:
-                  success:
-                    type: boolean
-                    const: true
-                  characterId:
-                    type: integer
-                    format: int32
-                    minimum: 0
-                    maximum: 4294967295
+                allOf:
+                  - $ref: "#/components/schemas/GuaranteedSuccessBool"
+                  - type: object
+                    properties:
+                      characterId:
+                        type: integer
+                        format: int32
+                        minimum: 0
+                        maximum: 4294967295
 
         "400":
           description: "Bad request"
@@ -498,20 +512,23 @@ paths:
               schema:
                 oneOf:
                   - allOf:
+                    - $ref: "#/components/schemas/GuaranteedSuccessBool"
                     - $ref: "#/components/schemas/ChatMessage"
                     - type: object
                       properties:
                         done:
                           type: boolean
                           const: false
-                  - type: object
-                    properties:
-                      timestamp:
-                        type: integer
-                        format: int64
-                      done:
-                        type: boolean
-                        const: true
+                  - allOf:
+                    - $ref: "#/components/schemas/GuaranteedSuccessBool"
+                    - type: object
+                      properties:
+                        timestamp:
+                          type: integer
+                          format: int64
+                        done:
+                          type: boolean
+                          const: true
 
         "400":
           description: "Bad request"
@@ -721,7 +738,7 @@ components:
       properties:
         role:
           type: string
-          enum: ["system", "user", "assistant"] # only these values are acceptable in ollama API
+          enum: ["system", "user", "assistant"]
         content:
           type: string
 
