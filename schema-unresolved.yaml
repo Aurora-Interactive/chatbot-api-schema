@@ -1,15 +1,11 @@
 openapi: 3.1.0
 info:
-  version: 1.0.2
+  version: 2.0.0
   title: "AI Chatbot REST API"
   description: "AI Chatbot REST API used in storing and executing AI chat completions in a personalized and conversational manner. It comes with support for streaming chat responses."
   contact:
     name: "Antonios Papadakis"
     email: "bdpaboi123@gmail.com"
-
-servers:
-  - url: "/api/v1"
-    description: "API version 1"
 
 paths:
   /api/v1/login:
@@ -17,16 +13,13 @@ paths:
       summary: "Username and password login"
       description: "Login and retrieve a reusable access token for use with the rest of the API"
       operationId: "login"
-      tags:
-        - "Users"
+      tags: ["Users"]
       requestBody:
         content:
           application/json:
             schema:
               type: object
-              required:
-                - "username"
-                - "password"
+              required: ["username", "password"]
               properties:
                 username:
                   type: string
@@ -191,17 +184,15 @@ paths:
       operationId: "initializeChat"
       tags:
         - Messages
+      parameters:
+        - $ref: "#/components/parameters/AccessToken"
       requestBody:
         content:
           application/json:
             schema:
               type: object
-              required:
-                - "accessToken"
-                - "characterId"
+              required: ["characterId"]
               properties:
-                accessToken:
-                  type: string
                 characterId:
                   type: integer
                   format: int32
@@ -244,20 +235,16 @@ paths:
       operationId: "saveChatMessage"
       tags:
         - Messages
+      parameters:
+        - $ref: "#/components/parameters/AccessToken"
       requestBody:
         content:
           application/json:
             schema:
               allOf:
                 - type: object
-                  required:
-                    - "accessToken"
-                    - "chatId"
-                    - "role"
-                    - "content"
+                  required: ["chatId", "role", "content"]
                   properties:
-                    accessToken:
-                      type: string
                     chatId:
                       type: integer
                       format: int32
@@ -407,19 +394,15 @@ paths:
       operationId: "createCharacter"
       tags:
         - Characters
+      parameters:
+        - $ref: "#/components/parameters/AccessToken"
       requestBody:
         content:
           application/json:
             schema:
               allOf:
                 - type: object
-                  required:
-                    - "characterName"
-                    - "characterDescription"
-                    - "characterAiPrompt"
-                    - "initialMessage"
-                    - "characterIcon"
-                    - "characterBanner"
+                  required: ["characterName", "characterDescription", "characterAiPrompt", "initialMessage", "characterIcon", "characterBanner"]
                   properties:
                     characterName:
                       type: string
@@ -478,19 +461,15 @@ paths:
       operationId: "sendMessage"
       tags:
         - Messages
+      parameters:
+        - $ref: "#/components/parameters/AccessToken"
       requestBody:
         content:
           application/json:
             schema:
               type: object
-              required:
-                - "accessToken"
-                - "chatId"
-                - "message"
-                - "context"
+              required: ["chatId", "message", "context"]
               properties:
-                accessToken:
-                  type: string
                 chatId:
                   type: integer
                   format: int32
@@ -626,8 +605,8 @@ components:
         maximum: 4294967295
 
     AccessToken:
-      name: "accessToken"
-      in: query
+      name: "X-Access-Token"
+      in: header
       required: true
       schema:
         type: string
@@ -715,15 +694,13 @@ components:
         characterIcon:
           type: string
           format: byte
-          description: "base64-encode AVIF image data"
-          examples:
-            - "data:image/avif;base64,AAABAAEAAAAAAAEACAA"
+          description: "base64-encoded AVIF image data"
+          examples: ["data:image/avif;base64,AAABAAEAAAAAAAEACAA"]
         characterBanner:
           type: string
           format: byte
-          description: "base64-encode AVIF image data"
-          examples:
-            - "data:image/avif;base64,AAABAAEAAAAAAAEACAA"
+          description: "base64-encoded AVIF image data"
+          examples: ["data:image/avif;base64,AAABAAEAAAAAAAEACAA"]
 
     CharacterAiInitializationData:
       type: object
