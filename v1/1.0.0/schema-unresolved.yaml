@@ -1,6 +1,6 @@
 openapi: 3.1.0
 info:
-  version: 1.0.0
+  version: 1.0.1
   title: "AI Chatbot REST API"
   description: "AI Chatbot REST API used in storing and executing AI chat completions in a personalized and conversational manner. It comes with support for streaming chat responses."
   contact:
@@ -24,6 +24,9 @@ paths:
           application/json:
             schema:
               type: object
+              required:
+                - "username"
+                - "password"
               properties:
                 username:
                   type: string
@@ -188,6 +191,9 @@ paths:
           application/json:
             schema:
               type: object
+              required:
+                - "accessToken"
+                - "characterId"
               properties:
                 accessToken:
                   type: string
@@ -239,6 +245,11 @@ paths:
             schema:
               allOf:
                 - type: object
+                  required:
+                    - "accessToken"
+                    - "chatId"
+                    - "role"
+                    - "content"
                   properties:
                     accessToken:
                       type: string
@@ -387,6 +398,13 @@ paths:
             schema:
               allOf:
                 - type: object
+                  required:
+                    - "characterName"
+                    - "characterDescription"
+                    - "characterAiPrompt"
+                    - "initialMessage"
+                    - "characterIcon"
+                    - "characterBanner"
                   properties:
                     characterName:
                       type: string
@@ -451,6 +469,11 @@ paths:
           application/json:
             schema:
               type: object
+              required:
+                - "accessToken"
+                - "chatId"
+                - "message"
+                - "context"
               properties:
                 accessToken:
                   type: string
