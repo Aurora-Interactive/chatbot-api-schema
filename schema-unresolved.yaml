@@ -450,7 +450,7 @@ paths:
             schema:
               allOf:
                 - type: object
-                  required: ["characterName", "characterDescription", "characterAiPrompt", "initialMessage", "characterIcon", "characterBanner"]
+                  required: ["characterName", "characterDescription", "characterAiPrompt", "initialMessage", "iconImage", "bannerImage"]
                   properties:
                     characterName:
                       type: string
