@@ -793,13 +793,16 @@ components:
 
     ChatMessage:
       type: object
-      required: ["role", "content"]
+      required: ["role", "content", "timestamp"]
       properties:
         role:
           type: string
           enum: ["system", "user", "assistant"]
         content:
           type: string
+        timestamp:
+          type: integer
+          examples: [1719363309690]
 
     GuaranteedSuccessBool:
       type: object
