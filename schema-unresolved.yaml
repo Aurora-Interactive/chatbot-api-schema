@@ -1,6 +1,6 @@
 openapi: 3.1.0
 info:
-  version: 2.3.0
+  version: 2.4.0
   title: "AI Chatbot REST API"
   description: "AI Chatbot REST API used in storing and executing AI chat completions in a personalized and conversational manner. It comes with support for streaming chat responses."
   contact:
@@ -33,6 +33,7 @@ paths:
             application/json:
               schema:
                 type: object
+                required: ["success", "accessToken"]
                 properties:
                   success:
                     type: boolean
@@ -97,6 +98,7 @@ paths:
                 allOf:
                   - $ref: "#/components/schemas/GuaranteedFailBool"
                   - type: object
+                    required: ["error"]
                     properties:
                       error:
                         type: string
@@ -121,6 +123,7 @@ paths:
                 allOf:
                   - $ref: "#/components/schemas/GuaranteedSuccessBool"
                   - type: object
+                    required: ["characters"]
                     properties:
                       characters:
                         type: array
@@ -349,6 +352,7 @@ paths:
                 allOf:
                   - $ref: "#/components/schemas/GuaranteedSuccessBool"
                   - type: object
+                    required: ["chatHistory"]
                     properties:
                       chatHistory:
                         type: array
@@ -402,6 +406,7 @@ paths:
                 allOf:
                   - $ref: "#/components/schemas/GuaranteedSuccessBool"
                   - type: object
+                    required: ["chatContext"]
                     properties:
                       chatContext:
                         type: array
@@ -474,6 +479,7 @@ paths:
                 allOf:
                   - $ref: "#/components/schemas/GuaranteedSuccessBool"
                   - type: object
+                    required: ["characterId"]
                     properties:
                       characterId:
                         type: integer
@@ -489,6 +495,7 @@ paths:
                 oneOf:
                   - $ref: "#/components/schemas/InvalidRequestResponse"
                   - type: object
+                    required: ["success", "error"]
                     properties:
                       success:
                         type: boolean
@@ -551,6 +558,7 @@ paths:
                     - $ref: "#/components/schemas/GuaranteedSuccessBool"
                     - $ref: "#/components/schemas/ChatMessage"
                     - type: object
+                      required: ["done"]
                       properties:
                         done:
                           type: boolean
@@ -558,6 +566,7 @@ paths:
                   - allOf:
                     - $ref: "#/components/schemas/GuaranteedSuccessBool"
                     - type: object
+                      required: ["timestamp", "done"]
                       properties:
                         timestamp:
                           type: integer
@@ -682,6 +691,7 @@ components:
     UnauthorizedIdResponse:
       type: object
       description: "Given chat ID does not belong to the given user"
+      required: ["success", "error"]
       properties:
         success:
           type: boolean
@@ -693,6 +703,7 @@ components:
     AccountInBadStandingResponse:
       type: object
       description: "Given user is not allowed to use the API, usually because they don't have an active subscription to our services"
+      required: ["success", "error"]
       properties:
         success:
           type: boolean
@@ -704,6 +715,7 @@ components:
     AuthenticationFailedResponse:
       type: object
       description: "The given access token is invalid"
+      required: ["success", "error"]
       properties:
         success:
           type: boolean
@@ -715,6 +727,7 @@ components:
     InvalidRequestResponse:
       type: object
       description: "One or more request parameters are malformed or invalid"
+      required: ["success", "error"]
       properties:
         success:
           type: boolean
@@ -725,6 +738,7 @@ components:
 
     InvalidChatId:
       type: object
+      required: ["success", "error"]
       properties:
         error:
           type: string
@@ -734,12 +748,14 @@ components:
       allOf:
         - $ref: "#/components/schemas/GuaranteedSuccessBool"
         - type: object
+          required: ["accessToken"]
           properties:
             accessToken:
               type: string
 
     CharacterOverview:
       type: object
+      required: ["id", "name", "description", "isOfficial"]
       properties:
         id:
           type: integer
@@ -755,6 +771,7 @@ components:
 
     CharacterImageData:
       type: object
+      required: ["iconImage", "bannerImage"]
       properties:
         iconImage:
           type: string
@@ -767,6 +784,7 @@ components:
 
     CharacterAiInitializationData:
       type: object
+      required: ["aiPrompt", "initialResponse"]
       properties:
         aiPrompt:
           type: string
@@ -775,6 +793,7 @@ components:
 
     ChatMessage:
       type: object
+      required: ["role", "content"]
       properties:
         role:
           type: string
@@ -784,6 +803,7 @@ components:
 
     GuaranteedSuccessBool:
       type: object
+      required: ["success"]
       properties:
         success:
           type: boolean
@@ -791,6 +811,7 @@ components:
 
     GuaranteedFailBool:
       type: object
+      required: ["success"]
       properties:
         success:
           type: boolean
