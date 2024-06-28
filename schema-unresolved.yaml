@@ -1,6 +1,6 @@
 openapi: 3.1.0
 info:
-  version: 2.5.3
+  version: 2.5.4
   title: "AI Chatbot REST API"
   description: "AI Chatbot REST API used in storing and executing AI chat completions in a personalized and conversational manner. It comes with support for streaming chat responses."
   contact:
@@ -334,7 +334,7 @@ paths:
             schema:
               allOf:
                 - type: object
-                  required: ["chatId", "role", "content"]
+                  required: ["chatId", "role", "content", "timestamp"]
                   properties:
                     chatId:
                       type: integer
