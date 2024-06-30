@@ -1,11 +1,15 @@
 openapi: 3.1.0
 info:
-  version: 2.5.4
+  version: 2.6.0
   title: "AI Chatbot REST API"
   description: "AI Chatbot REST API used in storing and executing AI chat completions in a personalized and conversational manner. It comes with support for streaming chat responses."
   contact:
     name: "Antonios Papadakis"
     email: "bdpaboi123@gmail.com"
+    
+servers:
+  - url: "/api/v1"
+    description: "API version 1"
 
 paths:
   /api/v2/login:
@@ -451,7 +455,13 @@ paths:
                       chatContext:
                         type: array
                         items:
-                          $ref: "#/components/schemas/ChatMessage"
+                          type: object
+                          required: ["role", "content"]
+                          properties:
+                            role:
+                              type: string
+                            content:
+                              type: string
 
         "400":
           description: "Bad request"
@@ -593,27 +603,13 @@ paths:
           content:
             application/json:
               schema:
-                oneOf:
-                  - allOf:
-                    - $ref: "#/components/schemas/GuaranteedSuccessBool"
-                    - $ref: "#/components/schemas/ChatMessage"
-                    - type: object
-                      required: ["done"]
-                      properties:
-                        done:
-                          type: boolean
-                          const: false
-                  - allOf:
-                    - $ref: "#/components/schemas/GuaranteedSuccessBool"
-                    - type: object
-                      required: ["timestamp", "done"]
-                      properties:
-                        timestamp:
-                          type: integer
-                          format: int64
-                        done:
-                          type: boolean
-                          const: true
+                allOf:
+                  - $ref: "#/components/schemas/GuaranteedSuccessBool"
+                  - type: object
+                    required: ["content"]
+                    properties:
+                      content:
+                        type: string
 
         "400":
           description: "Bad request"
