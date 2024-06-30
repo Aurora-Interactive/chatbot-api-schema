@@ -1,6 +1,6 @@
 openapi: 3.1.0
 info:
-  version: 2.6.0
+  version: 2.6.1
   title: "AI Chatbot REST API"
   description: "AI Chatbot REST API used in storing and executing AI chat completions in a personalized and conversational manner. It comes with support for streaming chat responses."
   contact:
@@ -290,9 +290,6 @@ paths:
               properties:
                 characterId:
                   type: integer
-                  format: int32
-                  minimum: 0
-                  maximum: 4294967295
 
       responses:
         "200":
@@ -338,14 +335,11 @@ paths:
             schema:
               allOf:
                 - type: object
-                  required: ["chatId", "role", "content", "timestamp"]
+                  required: ["chatId"]
                   properties:
                     chatId:
                       type: integer
-                      format: int32
-                      minimum: 0
-                      maximum: 4294967295
-                - $ref: "#/components/schemas/ChatMessage"
+                - $ref: "#/components/schemas/TimestampedChatMessage"
 
       responses:
         "200":
@@ -401,7 +395,7 @@ paths:
                       chatHistory:
                         type: array
                         items:
-                          $ref: "#/components/schemas/ChatMessage"
+                          $ref: "#/components/schemas/TimestampedChatMessage"
 
         "400":
           description: "Bad request"
@@ -533,9 +527,6 @@ paths:
                     properties:
                       characterId:
                         type: integer
-                        format: int32
-                        minimum: 0
-                        maximum: 4294967295
 
         "400":
           description: "Bad request"
@@ -586,9 +577,6 @@ paths:
               properties:
                 chatId:
                   type: integer
-                  format: int32
-                  minimum: 0
-                  maximum: 4294967295
                 message:
                   type: string
                 context:
@@ -692,9 +680,6 @@ components:
       required: true
       schema:
         type: integer
-        format: int32
-        minimum: 0
-        maximum: 4294967295
 
     ChatId:
       name: "chatId"
@@ -702,9 +687,6 @@ components:
       required: true
       schema:
         type: integer
-        format: int32
-        minimum: 0
-        maximum: 4294967295
 
     AccessToken:
       name: "X-Access-Token"
@@ -719,9 +701,6 @@ components:
       required: true
       schema:
         type: integer
-        format: int32
-        minimum: 0
-        maximum: 4294967295
 
   schemas:
     UnauthorizedIdResponse:
@@ -805,9 +784,6 @@ components:
       properties:
         id:
           type: integer
-          format: int32
-          minimum: 0
-          maximum: 4294967295
         name:
           type: string
         description:
@@ -839,16 +815,23 @@ components:
 
     ChatMessage:
       type: object
-      required: ["role", "content", "timestamp"]
+      required: ["role", "content"]
       properties:
         role:
           type: string
           enum: ["system", "user", "assistant"]
         content:
           type: string
-        timestamp:
-          type: integer
-          examples: [1719363309690]
+
+    TimestampedChatMessage:
+      allOf:
+        - $ref: "#/components/schemas/ChatMessage"
+        - type: object
+          required: ["timestamp"]
+          properties:
+            timestamp:
+              type: integer
+              examples: [1719363309]
 
     GuaranteedSuccessBool:
       type: object
