@@ -1,6 +1,6 @@
 openapi: 3.1.0
 info:
-  version: 2.6.2
+  version: 2.7.0
   title: "AI Chatbot REST API"
   description: "AI Chatbot REST API used in storing and executing AI chat completions in a personalized and conversational manner. It comes with support for streaming chat responses."
   contact:
@@ -583,17 +583,20 @@ paths:
 
       responses:
         "200":
-          description: "Response stream of partial messages. Note: This endpoint uses HTTP streams and isn't a one-shot endpoint. Each stream output is a fragment of the entire AI response's message."
-          content:
-            application/json:
+          description: "Server Sent Events stream of JSON data of each token as it becomes available, as shown in the documented example. On the stream.on(\"end\") event, no new data is sent."
+          headers:
+            Transfer-Encoding:
               schema:
-                allOf:
-                  - $ref: "#/components/schemas/GuaranteedSuccessBool"
-                  - type: object
-                    required: ["content"]
-                    properties:
-                      content:
-                        type: string
+                type: string
+                enum: ["chunked"]
+          content:
+            text/event-stream:
+              examples:
+                sampleToken:
+                  value: "data: {\"content\":\"Rev\"}"
+              schema:
+                type: string
+                summary: "Stream of live token data"
 
         "400":
           description: "Bad request"
