@@ -1,6 +1,6 @@
 openapi: 3.1.0
 info:
-  version: 2.6.1
+  version: 2.6.2
   title: "AI Chatbot REST API"
   description: "AI Chatbot REST API used in storing and executing AI chat completions in a personalized and conversational manner. It comes with support for streaming chat responses."
   contact:
@@ -132,7 +132,15 @@ paths:
                       characters:
                         type: array
                         items:
-                          $ref: "#/components/schemas/CharacterOverview"
+                          allOf:
+                            - $ref: "#/components/schemas/CharacterOverview"
+                            - type: object
+                              required: ["isOfficial", "id"]
+                              properties:
+                                isOfficial:
+                                  type: boolean
+                                id:
+                                  type: integer
 
         "400":
           description: "Bad request"
@@ -498,20 +506,8 @@ paths:
           application/json:
             schema:
               allOf:
-                - type: object
-                  required: ["characterName", "characterDescription", "characterAiPrompt", "initialMessage", "iconImage", "bannerImage"]
-                  properties:
-                    characterName:
-                      type: string
-                    characterDescription:
-                      type: string
-                      description: "Information about the character"
-                    characterAiPrompt:
-                      type: string
-                      description: "Prompt that will be given to our AI model for context."
-                    initialMessage:
-                      type: string
-                      description: "The first message that the AI will respond with, regardless of the context prompt."
+                - $ref: "#/components/schemas/CharacterAiInitializationData"
+                - $ref: "#/components/schemas/CharacterOverview"
                 - $ref: "#/components/schemas/CharacterImageData"
 
       responses:
@@ -780,16 +776,12 @@ components:
 
     CharacterOverview:
       type: object
-      required: ["id", "name", "description", "isOfficial"]
+      required: ["name", "description"]
       properties:
-        id:
-          type: integer
         name:
           type: string
         description:
           type: string
-        isOfficial:
-          type: boolean
 
     CharacterImageData:
       type: object
