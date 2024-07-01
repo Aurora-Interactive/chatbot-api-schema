@@ -21,7 +21,7 @@ jobs:
       - name: Deploy API documentation
         uses: bump-sh/github-action@v1
         with:
-          doc: aurora-interactive-services
+          doc: ${{secrets.BUMP_DOC_ID}}
           token: ${{secrets.BUMP_TOKEN}}
           file: ./schema-unresolved.yaml
   api-diff:
@@ -34,7 +34,7 @@ jobs:
       - name: Comment pull request with API diff
         uses: bump-sh/github-action@v1
         with:
-          doc: aurora-interactive-services
+          doc: ${{secrets.BUMP_DOC_ID}}
           token: ${{secrets.BUMP_TOKEN}}
           file: schema-unresolved.yaml
           command: diff
