@@ -1,6 +1,6 @@
 openapi: 3.1.0
 info:
-  version: 2.7.0
+  version: 2.8.0
   title: "AI Chatbot REST API"
   description: "AI Chatbot REST API used in storing and executing AI chat completions in a personalized and conversational manner. It comes with support for streaming chat responses."
   contact:
@@ -670,6 +670,45 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/AccountInBadStandingResponse"
+                
+  /api/v2/deleteChat:
+    delete:
+      summary: "Delete a chat"
+      description: "Delete a chat, given a chat ID. All message history that is still stored is also deleted"
+      operationId: "deleteChat"
+      tags:
+        - Messages
+      parameters:
+        - $ref: "#/components/parameters/AccessToken"
+        - $ref: "#/components/parameters/ChatId"
+      
+      responses:
+        "200":
+          description: "Chat and all relevant data deleted successfully"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GuaranteedSuccessBool"
+                
+        "400":
+          description: "Bad request"
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - $ref: "#/components/schemas/InvalidRequestResponse"
+                  - allOf:
+                    - $ref: "#/components/schemas/GuaranteedFailBool"
+                    - $ref: "#/components/schemas/InvalidChatId"
+
+        "401":
+          description: "Unauthorized"
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - $ref: "#/components/schemas/AuthenticationFailedResponse"
+                  - $ref: "#/components/schemas/UnauthorizedIdResponse"
 
 components:
   parameters:
@@ -704,7 +743,7 @@ components:
   schemas:
     UnauthorizedIdResponse:
       type: object
-      description: "Given chat ID does not belong to the given user"
+      description: "Given resource ID does not belong to the given user"
       required: ["success", "error"]
       properties:
         success:
