@@ -41,7 +41,7 @@ paths:
                 properties:
                   success:
                     type: boolean
-                    const: true
+                    default: true
                   accessToken:
                     type: string
 
@@ -254,7 +254,7 @@ paths:
                 properties:
                   success:
                     type: boolean
-                    const: true
+                    default: true
                   chats:
                     type: array
                     items:
@@ -536,7 +536,7 @@ paths:
                     properties:
                       success:
                         type: boolean
-                        const: false
+                        default: false
                       error:
                         type: string
                         enum: ["Character with this name already exists"]
@@ -748,7 +748,7 @@ components:
       properties:
         success:
           type: boolean
-          const: false
+          default: false
         error:
           type: string
           enum: ["Chat or message does not belong to this user"]
@@ -760,7 +760,7 @@ components:
       properties:
         success:
           type: boolean
-          const: false
+          default: false
         error:
           type: string
           enum: ["Account associated with this access token is not subscribed to a paid plan"]
@@ -772,7 +772,7 @@ components:
       properties:
         success:
           type: boolean
-          const: false
+          default: false
         error:
           type: string
           enum: ["Invalid username, password, or access token"]
@@ -784,7 +784,7 @@ components:
       properties:
         success:
           type: boolean
-          const: false
+          default: false
         error:
           type: string
           enum: ["One or more API parameters are malformed. Please check your request and try again"]
@@ -873,7 +873,7 @@ components:
       properties:
         success:
           type: boolean
-          const: true
+          default: true
 
     GuaranteedFailBool:
       type: object
@@ -881,7 +881,7 @@ components:
       properties:
         success:
           type: boolean
-          const: false
+          default: false
 
 tags:
   - name: "Characters"
