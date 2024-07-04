@@ -1,6 +1,6 @@
 openapi: 3.1.0
 info:
-  version: 2.8.1
+  version: 3.0.0
   title: "AI Chatbot REST API"
   description: "AI Chatbot REST API used in storing and executing AI chat completions in a personalized and conversational manner. It comes with support for streaming chat responses."
   contact:
@@ -8,12 +8,28 @@ info:
     email: "bdpaboi123@gmail.com"
     
 servers:
-  - url: "/api/v1"
-    description: "API version 1"
+  - url: "https://api.chatbot.aurora-interactive.online"
+    description: "Main API Server"
+    
+x-speakeasy-retries:
+  strategy: backoff
+  backoff:
+    initialInterval: 1000
+    maxInterval: 60000
+    maxElapsedTime: 3600000
+    exponent: 1.2
+  statusCodes:
+    - 5XX
+  retryConnectionErrors: true
+  
+x-speakeasy-globals:
+  parameters:
+    - $ref: "#/components/parameters/AccessToken"
 
 paths:
-  /api/v2/login:
+  /api/v3/login:
     post:
+      x-speakeasy-ignore: true
       summary: "Username and password login"
       description: "Login and retrieve a reusable access token for use with the rest of the API"
       operationId: "login"
@@ -36,14 +52,7 @@ paths:
           content:
             application/json:
               schema:
-                type: object
-                required: ["success", "accessToken"]
-                properties:
-                  success:
-                    type: boolean
-                    default: true
-                  accessToken:
-                    type: string
+                $ref: "#/components/schemas/AccessTokenResponse"
 
         "400":
           description: "Bad request"
@@ -61,9 +70,11 @@ paths:
 
   /api/v2/signup:
     post:
+      x-speakeasy-ignore: true
       summary: "User signup"
       description: "Create a user account"
       operationId: "signup"
+      x-speakeasy-name-override: "createAccount"
       tags: ["Users"]
       requestBody:
         content:
@@ -85,7 +96,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/SuccessfulAccessTokenResponse"
+                $ref: "#/components/schemas/AccessTokenResponse"
 
         "400":
           description: "Bad request"
@@ -100,19 +111,15 @@ paths:
             application/json:
               schema:
                 allOf:
-                  - $ref: "#/components/schemas/GuaranteedFailBool"
-                  - type: object
-                    required: ["error"]
-                    properties:
-                      error:
-                        type: string
-                        enum: ["Username or email already in use"]
+                  - $ref: "#/components/schemas/FailedRequest"
+                  - $ref: "#/components/schemas/DuplicateSignupError"
 
-  /api/v2/allCharacters:
+  /api/v3/allCharacters:
     get:
       summary: "Character metadata"
       description: "Return metadata for all the available characters in the system"
       operationId: "getCharacters"
+      x-speakeasy-name-override: "allCharacters"
       tags:
         - Characters
       parameters:
@@ -125,7 +132,7 @@ paths:
             application/json:
               schema:
                 allOf:
-                  - $ref: "#/components/schemas/GuaranteedSuccessBool"
+                  - $ref: "#/components/schemas/SuccessfulRequest"
                   - type: object
                     required: ["characters"]
                     properties:
@@ -156,11 +163,12 @@ paths:
               schema:
                 $ref: "#/components/schemas/AuthenticationFailedResponse"
 
-  /api/v2/characterImageData:
+  /api/v3/characterImageData:
     get:
       summary: "Character image visuals"
       description: "Get the banner and profile icon that is assigned to a given character"
       operationId: "getCharacterImageData"
+      x-speakeasy-name-override: "imageData"
       tags:
         - Characters
       parameters:
@@ -175,7 +183,7 @@ paths:
               schema:
                 allOf:
                   - $ref: "#/components/schemas/CharacterImageData"
-                  - $ref: "#/components/schemas/GuaranteedSuccessBool"
+                  - $ref: "#/components/schemas/SuccessfulRequest"
 
         "400":
           description: "Bad request"
@@ -191,11 +199,12 @@ paths:
               schema:
                 $ref: "#/components/schemas/AuthenticationFailedResponse"
 
-  /api/v2/characterAiInitializationData:
+  /api/v3/characterAiInitializationData:
     get:
       summary: "Character AI initialization data"
       description: "Get the context prompt and initial message that is associated with the given character"
       operationId: "getCharacterAiInitializationData"
+      x-speakeasy-name-override: "aiInitializationData"
       tags:
         - Characters
       parameters:
@@ -210,7 +219,7 @@ paths:
               schema:
                 allOf:
                   - $ref: "#/components/schemas/CharacterAiInitializationData"
-                  - $ref: "#/components/schemas/GuaranteedSuccessBool"
+                  - $ref: "#/components/schemas/SuccessfulRequest"
 
         "400":
           description: "Bad request"
@@ -233,13 +242,14 @@ paths:
               schema:
                 $ref: "#/components/schemas/AccountInBadStandingResponse"
 
-  /api/v2/allChatsForUser:
+  /api/v3/allChatsForUser:
     get:
       summary: "Get all chats assigned to user"
       description: "Get the chat IDs assigned to a given user ID. useful for getting chat context and message history"
       operationId: "getChatsForUser"
+      x-speakeasy-name-override: "allChatsForUser"
       tags:
-        - Messages
+        - Chats
       parameters:
         - $ref: "#/components/parameters/AccessToken"
       
@@ -249,22 +259,17 @@ paths:
           content:
             application/json:
               schema:
-                type: object
-                required: ["success", "chats"]
-                properties:
-                  success:
-                    type: boolean
-                    default: true
-                  chats:
-                    type: array
-                    items:
-                      type: object
-                      required: ["chatId", "characterId"]
-                      properties:
-                        chatId:
-                          type: integer
-                        characterId:
-                          type: integer
+                allOf:
+                - $ref: "#/components/schemas/SuccessfulRequest"
+                - type: object
+                  required: ["chats"]
+                  properties:
+                    chats:
+                      type: array
+                      items:
+                        allOf:
+                        - $ref: "#/components/schemas/CharacterId"
+                        - $ref: "#/components/schemas/ChatId"
 
         "400":
           description: "Bad request"
@@ -280,24 +285,21 @@ paths:
               schema:
                 $ref: "#/components/schemas/AuthenticationFailedResponse"
 
-  /api/v2/initializeChat:
+  /api/v3/initializeChat:
     post:
       summary: "Initialize chat with AI character"
-      description: "Initialize a chat with a given AI character. NOTE: This endpoint doesn't store the initial message in the initialization data. You would still need to store the message using standard methods in this API, with the role as `system` and the message contents the same as the initialization data."
+      description: "Initialize a chat with a given AI character, including storing the character's initial response as a message in our system."
       operationId: "initializeChat"
+      x-speakeasy-name-override: "createNew"
       tags:
-        - Messages
+        - Chats
       parameters:
         - $ref: "#/components/parameters/AccessToken"
       requestBody:
         content:
           application/json:
             schema:
-              type: object
-              required: ["characterId"]
-              properties:
-                characterId:
-                  type: integer
+              $ref: "#/components/schemas/CharacterId"
 
       responses:
         "200":
@@ -305,7 +307,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/GuaranteedSuccessBool"
+                $ref: "#/components/schemas/SuccessfulRequest"
 
         "400":
           description: "Bad request"
@@ -328,11 +330,12 @@ paths:
               schema:
                 $ref: "#/components/schemas/AccountInBadStandingResponse"
 
-  /api/v2/saveChatMessage:
+  /api/v3/saveMessage:
     post:
       summary: "Save chat message"
       description: "Save chat message either from the initial context prompt or after AI generation"
-      operationId: "saveChatMessage"
+      operationId: "saveMessage"
+      x-speakeasy-name-override: "saveNew"
       tags:
         - Messages
       parameters:
@@ -342,12 +345,8 @@ paths:
           application/json:
             schema:
               allOf:
-                - type: object
-                  required: ["chatId"]
-                  properties:
-                    chatId:
-                      type: integer
-                - $ref: "#/components/schemas/TimestampedChatMessage"
+                - $ref: "#/components/schemas/ChatId"
+                - $ref: "#/components/schemas/TimestampedMessage"
 
       responses:
         "200":
@@ -355,7 +354,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/GuaranteedSuccessBool"
+                $ref: "#/components/schemas/SuccessfulRequest"
 
         "400":
           description: "Bad request"
@@ -378,11 +377,12 @@ paths:
               schema:
                 $ref: "#/components/schemas/AccountInBadStandingResponse"
 
-  /api/v2/getFullChatHistory:
+  /api/v3/getMessageHistory:
     get:
-      summary: "Get full chat history"
+      summary: "Get full message history"
       description: "Get all of the messages sent in a given chat"
-      operationId: "getFullChatHistory"
+      operationId: "getMessageHistory"
+      x-speakeasy-name-override: "messageHistory"
       tags:
         - Messages
       parameters:
@@ -396,14 +396,14 @@ paths:
             application/json:
               schema:
                 allOf:
-                  - $ref: "#/components/schemas/GuaranteedSuccessBool"
+                  - $ref: "#/components/schemas/SuccessfulRequest"
                   - type: object
                     required: ["chatHistory"]
                     properties:
                       chatHistory:
                         type: array
                         items:
-                          $ref: "#/components/schemas/TimestampedChatMessage"
+                          $ref: "#/components/schemas/TimestampedMessage"
 
         "400":
           description: "Bad request"
@@ -413,7 +413,7 @@ paths:
                 oneOf:
                   - $ref: "#/components/schemas/InvalidRequestResponse"
                   - allOf:
-                    - $ref: "#/components/schemas/GuaranteedFailBool"
+                    - $ref: "#/components/schemas/FailedRequest"
                     - $ref: "#/components/schemas/InvalidChatId"
 
         "401":
@@ -432,11 +432,12 @@ paths:
               schema:
                 $ref: "#/components/schemas/AccountInBadStandingResponse"
 
-  /api/v2/getChatContext:
+  /api/v3/getMessageContext:
     get:
       summary: "Get chat context"
       description: "Get all the messages from a given chat that are allocated to be used as AI model context. Almost always less messages than full chat history for performance reasons when running against our AI model."
-      operationId: "getChatContext"
+      operationId: "getMessageContext"
+      x-speakeasy-name-override: "messageContext"
       tags:
         - Messages
       parameters:
@@ -450,20 +451,14 @@ paths:
             application/json:
               schema:
                 allOf:
-                  - $ref: "#/components/schemas/GuaranteedSuccessBool"
+                  - $ref: "#/components/schemas/SuccessfulRequest"
                   - type: object
                     required: ["chatContext"]
                     properties:
                       chatContext:
                         type: array
                         items:
-                          type: object
-                          required: ["role", "content"]
-                          properties:
-                            role:
-                              type: string
-                            content:
-                              type: string
+                          $ref: "#/components/schemas/Message"
 
         "400":
           description: "Bad request"
@@ -473,7 +468,7 @@ paths:
                 oneOf:
                   - $ref: "#/components/schemas/InvalidRequestResponse"
                   - allOf:
-                    - $ref: "#/components/schemas/GuaranteedFailBool"
+                    - $ref: "#/components/schemas/FailedRequest"
                     - $ref: "#/components/schemas/InvalidChatId"
 
         "401":
@@ -492,11 +487,12 @@ paths:
               schema:
                 $ref: "#/components/schemas/AccountInBadStandingResponse"
 
-  /api/v2/createCharacter:
+  /api/v3/createCharacter:
     post:
       summary: "Create character"
       description: "Upload character data to our system"
       operationId: "createCharacter"
+      x-speakeasy-name-override: "createNew"
       tags:
         - Characters
       parameters:
@@ -517,12 +513,8 @@ paths:
             application/json:
               schema:
                 allOf:
-                  - $ref: "#/components/schemas/GuaranteedSuccessBool"
-                  - type: object
-                    required: ["characterId"]
-                    properties:
-                      characterId:
-                        type: integer
+                  - $ref: "#/components/schemas/SuccessfulRequest"
+                  - $ref: "#/components/schemas/CharacterId"
 
         "400":
           description: "Bad request"
@@ -531,15 +523,9 @@ paths:
               schema:
                 oneOf:
                   - $ref: "#/components/schemas/InvalidRequestResponse"
-                  - type: object
-                    required: ["success", "error"]
-                    properties:
-                      success:
-                        type: boolean
-                        default: false
-                      error:
-                        type: string
-                        enum: ["Character with this name already exists"]
+                  - allOf:
+                    - $ref: "#/components/schemas/SuccessfulRequest"
+                    - $ref: "#/components/schemas/DuplicateCharacterError"
 
         "401":
           description: "Unauthorized"
@@ -555,11 +541,12 @@ paths:
               schema:
                 $ref: "#/components/schemas/AccountInBadStandingResponse"
 
-  /api/v2/sendMessage:
+  /api/v3/sendMessage:
     post:
       summary: "Send message"
       description: "Send a chat message to a particular chat for a response"
       operationId: "sendMessage"
+      x-speakeasy-name-override: "send"
       tags:
         - Messages
       parameters:
@@ -568,18 +555,19 @@ paths:
         content:
           application/json:
             schema:
-              type: object
-              required: ["chatId", "message", "context"]
-              properties:
-                chatId:
-                  type: integer
-                message:
-                  type: string
-                context:
-                  description: "Messages to be used as AI context during response generation"
-                  type: array
-                  items:
-                    $ref: "#/components/schemas/ChatMessage"
+              allOf:
+                - $ref: "#/components/schemas/ChatId"
+                - type: object
+                  required: ["message", "context"]
+                  properties:
+                    message:
+                      type: string
+                    context:
+                      description: "Messages to be used as AI context during response generation"
+                      x-speakeasy-name-override: "messageContext"
+                      type: array
+                      items:
+                        $ref: "#/components/schemas/Message"
 
       responses:
         "200":
@@ -606,7 +594,7 @@ paths:
                 oneOf:
                   - $ref: "#/components/schemas/InvalidRequestResponse"
                   - allOf:
-                    - $ref: "#/components/schemas/GuaranteedFailBool"
+                    - $ref: "#/components/schemas/FailedRequest"
                     - $ref: "#/components/schemas/InvalidChatId"
 
         "401":
@@ -625,11 +613,12 @@ paths:
               schema:
                 $ref: "#/components/schemas/AccountInBadStandingResponse"
 
-  /api/v2/deleteMessage:
+  /api/v3/deleteMessage:
     delete:
       summary: "Delete message"
       description: "Remove message from message history, given a message ID"
       operationId: "deleteMessage"
+      x-speakeasy-name-override: "delete"
       tags:
         - Messages
       parameters:
@@ -642,7 +631,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/GuaranteedSuccessBool"
+                $ref: "#/components/schemas/SuccessfulRequest"
 
         "400":
           description: "Bad request"
@@ -652,7 +641,7 @@ paths:
                 oneOf:
                   - $ref: "#/components/schemas/InvalidRequestResponse"
                   - allOf:
-                    - $ref: "#/components/schemas/GuaranteedFailBool"
+                    - $ref: "#/components/schemas/FailedRequest"
                     - $ref: "#/components/schemas/InvalidMessageId"
 
         "401":
@@ -670,14 +659,15 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/AccountInBadStandingResponse"
-                
-  /api/v2/deleteChat:
+
+  /api/v3/deleteChat:
     delete:
       summary: "Delete a chat"
       description: "Delete a chat, given a chat ID. All message history that is still stored is also deleted"
       operationId: "deleteChat"
+      x-speakeasy-name-override: "delete"
       tags:
-        - Messages
+        - Chats
       parameters:
         - $ref: "#/components/parameters/AccessToken"
         - $ref: "#/components/parameters/ChatId"
@@ -688,7 +678,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/GuaranteedSuccessBool"
+                $ref: "#/components/schemas/SuccessfulRequest"
                 
         "400":
           description: "Bad request"
@@ -698,7 +688,7 @@ paths:
                 oneOf:
                   - $ref: "#/components/schemas/InvalidRequestResponse"
                   - allOf:
-                    - $ref: "#/components/schemas/GuaranteedFailBool"
+                    - $ref: "#/components/schemas/FailedRequest"
                     - $ref: "#/components/schemas/InvalidChatId"
 
         "401":
@@ -711,6 +701,7 @@ paths:
                   - $ref: "#/components/schemas/UnauthorizedIdResponse"
 
 components:
+# TODO: add examples to parameters
   parameters:
     MessageId:
       name: "messageId"
@@ -727,11 +718,13 @@ components:
         type: integer
 
     AccessToken:
-      name: "X-Access-Token"
+      name: "x-access-token"
+      x-speakeasy-name-override: "accessToken"
       in: header
       required: true
       schema:
         type: string
+      x-speakeasy-globals-hidden: true
 
     CharacterId:
       name: "characterId"
@@ -742,81 +735,155 @@ components:
 
   schemas:
     UnauthorizedIdResponse:
+      title: "Unauthorized ID Response"
+      x-speakeasy-name-override: "UnauthorizedIdError"
+      allOf:
+      - $ref: "#/components/schemas/FailedRequest"
+      - type: object
+        description: "Given resource ID does not belong to the given user"
+        required: ["error"]
+        properties:
+          error:
+            type: string
+            enum: ["Chat or message does not belong to this user"]
+      examples:
+        sampleResponse:
+          summary: "The resource the user was trying to access does not belong to them"
+          value:
+            errorResponse:
+              - success: false
+                error: "Chat or message does not belong to this user"
+          
+    DuplicateSignupError:
       type: object
-      description: "Given resource ID does not belong to the given user"
-      required: ["success", "error"]
+      title: "Duplicate Signup Error"
+      required: ["error"]
       properties:
-        success:
-          type: boolean
-          default: false
         error:
           type: string
-          enum: ["Chat or message does not belong to this user"]
+          enum: ["Username or email already in use"]
+      examples:
+        sampleResponse:
+          summary: "The given email/username is already registerd in our system"
+          value:
+            errorMessage:
+              - error: "Username or email already in use"
 
     AccountInBadStandingResponse:
-      type: object
-      description: "Given user is not allowed to use the API, usually because they don't have an active subscription to our services"
-      required: ["success", "error"]
-      properties:
-        success:
-          type: boolean
-          default: false
-        error:
-          type: string
-          enum: ["Account associated with this access token is not subscribed to a paid plan"]
+      title: "Account In Bad Standing Error"
+      x-speakeasy-name-override: "AccountInBadStandingError"
+      allOf:
+        - $ref: "#/components/schemas/FailedRequest"
+        - type: object
+          description: "Given user is not allowed to use the API, usually because they don't have an active subscription to our services"
+          required: ["error"]
+          properties:
+            error:
+              type: string
+              enum: ["Account associated with this access token is not subscribed to a paid plan"]
+      examples:
+        sampleResponse:
+          summary: "User isn't subscribed to our services and thus is not allowed to operate on paid endpoints."
+          value:
+            errorMessage:
+              - success: false
+                error: "Account associated with this access token is not subscribed to a paid plan"
 
     AuthenticationFailedResponse:
-      type: object
-      description: "The given access token is invalid"
-      required: ["success", "error"]
-      properties:
-        success:
-          type: boolean
-          default: false
-        error:
-          type: string
-          enum: ["Invalid username, password, or access token"]
+      title: "Unauthorized Error"
+      x-speakeasy-name-override: "AuthenticationFailedError"
+      allOf:
+        - $ref: "#/components/schemas/FailedRequest"
+        - type: object
+          description: "The given access token is invalid"
+          required: ["error"]
+          properties:
+            error:
+              type: string
+              enum: ["Invalid username, password, or access token"]
+      examples:
+        sampleResponse:
+          summary: "User entered invalid username, password, or access token"
+          value:
+            errorMessage:
+              - success: false
+                error: "Invalid username, password, or access token"
 
     InvalidRequestResponse:
-      type: object
-      description: "One or more request parameters are malformed or invalid"
-      required: ["success", "error"]
-      properties:
-        success:
-          type: boolean
-          default: false
-        error:
-          type: string
-          enum: ["One or more API parameters are malformed. Please check your request and try again"]
+      title: "Invalid Request Error"
+      x-speakeasy-name-override: "BadRequestError"
+      allOf:
+        - $ref: "#/components/schemas/FailedRequest"
+        - type: object
+          description: "One or more request parameters are malformed or invalid"
+          required: ["error"]
+          properties:
+            error:
+              type: string
+              enum: ["One or more API parameters are malformed. Please check your request and try again"]
+      examples:
+        sampleResponse:
+          summary: "The given API parameters are malformed or otherwise invalid"
+          value:
+            errorMessage:
+              - success: false
+                error: "One or more API parameters are malformed. Please check your request and try again"
 
     InvalidMessageId:
+      title: "Invalid Message ID Error"
+      x-speakeasy-name-override: "InvalidMessageIdError"
       allOf:
-        - $ref: "#/components/schemas/GuaranteedFailBool"
+        - $ref: "#/components/schemas/FailedRequest"
         - type: object
           required: ["error"]
           properties:
             error:
               type: string
               enum: ["Invalid message ID"]
+      examples:
+        sampleResponse:
+          summary: "The given message ID is invalid"
+          value:
+            errorMessage:
+              - success: false
+                error: "Invalid message ID"
 
     InvalidChatId:
+      title: "Invalid Chat ID Error"
+      x-speakeasy-name-override: "InvalidChatIdError"
       type: object
       required: ["error"]
       properties:
         error:
           type: string
           enum: ["Invalid chat ID"]
+      examples:
+        sampleResponse:
+          summary: "The given chat ID is invalid"
+          value:
+            errorMessage:
+              - success: false
+                error: "Invalid chat ID"
 
-    SuccessfulAccessTokenResponse:
+    AccessTokenResponse:
+      title: "Access Token Response"
+      x-speakeasy-name-override: "AccessTokenObj"
       allOf:
-        - $ref: "#/components/schemas/GuaranteedSuccessBool"
+        - $ref: "#/components/schemas/SuccessfulRequest"
         - type: object
           required: ["accessToken"]
           properties:
             accessToken:
               type: string
+          examples:
+            sampleAccessTokenResponse:
+              summary: "Example response containing the user's access token"
+              value:
+                - success: true
+                  accessToken: "aGAuT24GwDiwNzSqrqHXspyo4zyCEFzFm5frvywaWDkHRPUy"
 
     CharacterOverview:
+      title: "Character Overview Response"
       type: object
       required: ["name", "description"]
       properties:
@@ -824,8 +891,44 @@ components:
           type: string
         description:
           type: string
+      examples:
+        sampleCharacterOverview:
+          summary: "Name and description of a character"
+          value:
+            characterOverview:
+              - name: "Morlen"
+                description: "You would love to see a detailed description, wouldn't you? Sorry, not here."
+          
+    CharacterId:
+      title: "Character Id Response"
+      type: object
+      required: ["characterId"]
+      properties:
+        characterId:
+          type: integer
+      examples:
+        sampleCharacterId:
+          summary: "Character ID, which is uniquely tied to a character"
+          value:
+            characterId:
+              - characterId: 8
+              
+    ChatId:
+      title: "Chat ID Response"
+      type: object
+      required: ["chatId"]
+      properties:
+        chatId:
+          type: integer
+      examples:
+        sampleChatId:
+          summary: "ID uniquely tied to a given chat"
+          value:
+            chatId:
+              chatId: 8
 
     CharacterImageData:
+      title: "Character Image Data Response"
       type: object
       required: ["iconImage", "bannerImage"]
       properties:
@@ -837,8 +940,16 @@ components:
           type: string
           description: "base64-encoded AVIF image data"
           examples: ["AAABAAEAAAAAAAEACAA"]
+      examples:
+        sampleCharacterImageData:
+          summary: "Banner and PFP of a character"
+          value:
+            characterImageData:
+              - iconImage: "AAABAAEAAAAAAAEACAA"
+                bannerImage: "AAABAAEAAAAAAAEACAA"
 
     CharacterAiInitializationData:
+      title: "CharacterAiInitializationData"
       type: object
       required: ["aiPrompt", "initialResponse"]
       properties:
@@ -846,8 +957,34 @@ components:
           type: string
         initialResponse:
           type: string
+      examples:
+        sampleCharacterAiInitializationData:
+          summary: "AI prompt and initial response of a character"
+          value:
+            characterImageData:
+              - iconImage: "you are a helpful assistant and companion"
+                bannerImage: "Hello, there! How may I be of assistance?"
+          
+    DuplicateCharacterError:
+      title: "Duplicate Character Error Response"
+      allOf:
+        - $ref: "#/components/schemas/FailedRequest"
+        - type: object
+          required: ["error"]
+          properties:
+            error:
+              type: string
+              enum: ["Character with this name already exists"]
+      examples:
+        sampleDuplicateCharacterError:
+          summary: "The character with the same already exists and thus can't be created"
+          value:
+            duplicateCharacterError:
+              - success: false
+                error: "Character with this name already exists"
 
-    ChatMessage:
+    Message:
+      title: "Messages Response"
       type: object
       required: ["role", "content"]
       properties:
@@ -856,32 +993,62 @@ components:
           enum: ["system", "user", "assistant"]
         content:
           type: string
+      examples:
+        sampleMessage:
+          summary: "Object that represents a message, holding its string contents and the sender"
+          value:
+            message:
+              - role: "assistant"
+                content: "Hello there! How may I be of assistance?"
 
-    TimestampedChatMessage:
+    TimestampedMessage:
+      title: "Timestamped Message Response"
       allOf:
-        - $ref: "#/components/schemas/ChatMessage"
+        - $ref: "#/components/schemas/Message"
         - type: object
           required: ["timestamp"]
           properties:
             timestamp:
               type: integer
               examples: [1719363309]
+          examples:
+            sampleTimestampedMessage:
+              summary: "Similar to Message, but this time a timestamp has been added to the object, signifiying when the message was sent"
+              value:
+                timestampedMessage:
+                  - role: "assistant"
+                    content: "Hello there! How may I be of assistance?"
+                    timestamp: 1719941299
 
-    GuaranteedSuccessBool:
+    SuccessfulRequest:
+      title: "Successful Request"
       type: object
       required: ["success"]
       properties:
         success:
           type: boolean
           default: true
+      examples:
+        sampleSuccess:
+          summary: "The request this objec's properties were included in succeeded"
+          value:
+            success:
+              - success: true
 
-    GuaranteedFailBool:
+    FailedRequest:
+      title: "Failed Request"
       type: object
       required: ["success"]
       properties:
         success:
           type: boolean
           default: false
+      examples:
+        sampleFailed:
+          summary: "The request this objec's properties were included in failed"
+          value:
+            failed:
+              - success: false
 
 tags:
   - name: "Characters"
@@ -889,6 +1056,9 @@ tags:
 
   - name: "Users"
     description: "Endpoints used in querying or updating information about users in the system"
+
+  - name: "Chats"
+    description: "Endpoints used in querying or updating information about chats in the system"
 
   - name: "Messages"
     description: "Endpoints used in querying or updating messages that have been stored in chat history"
