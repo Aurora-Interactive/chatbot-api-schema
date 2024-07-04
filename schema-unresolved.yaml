@@ -701,7 +701,6 @@ paths:
                   - $ref: "#/components/schemas/UnauthorizedIdResponse"
 
 components:
-# TODO: add examples to parameters
   parameters:
     MessageId:
       name: "messageId"
@@ -709,6 +708,12 @@ components:
       required: true
       schema:
         type: integer
+      examples:
+        sampleMessageId:
+          summary: "Integer ID uniquely tied to a message"
+          value:
+            messageId:
+              - messageId: 8
 
     ChatId:
       name: "chatId"
@@ -716,6 +721,12 @@ components:
       required: true
       schema:
         type: integer
+      examples:
+        sampleChatId:
+          summary: "Integer ID uniquely tied to a chat"
+          value:
+            chatId:
+              - chatId: 8
 
     AccessToken:
       name: "x-access-token"
@@ -724,6 +735,12 @@ components:
       required: true
       schema:
         type: string
+      examples:
+        sampleAccessToken:
+          summary: "Secret string-type token that allows the user to use authenticated API endpoints"
+          value:
+            accessToken:
+              - "x-access-token": wcdE8dGPZEshG6B8E5uGpgALr5LzwPX5AqZFKAZsfcvzuHVf
       x-speakeasy-globals-hidden: true
 
     CharacterId:
@@ -732,6 +749,12 @@ components:
       required: true
       schema:
         type: integer
+      examples:
+        sampleCharacterId:
+          summary: "Integer ID uniquely tied to a character"
+          value:
+            characterId:
+              - characterId: 8
 
   schemas:
     UnauthorizedIdResponse:
@@ -875,12 +898,12 @@ components:
           properties:
             accessToken:
               type: string
-          examples:
-            sampleAccessTokenResponse:
-              summary: "Example response containing the user's access token"
-              value:
-                - success: true
-                  accessToken: "aGAuT24GwDiwNzSqrqHXspyo4zyCEFzFm5frvywaWDkHRPUy"
+      examples:
+        sampleAccessTokenResponse:
+          summary: "Example response containing the user's access token"
+          value:
+            - success: true
+              accessToken: "aGAuT24GwDiwNzSqrqHXspyo4zyCEFzFm5frvywaWDkHRPUy"
 
     CharacterOverview:
       title: "Character Overview Response"
@@ -1011,14 +1034,14 @@ components:
             timestamp:
               type: integer
               examples: [1719363309]
-          examples:
-            sampleTimestampedMessage:
-              summary: "Similar to Message, but this time a timestamp has been added to the object, signifiying when the message was sent"
-              value:
-                timestampedMessage:
-                  - role: "assistant"
-                    content: "Hello there! How may I be of assistance?"
-                    timestamp: 1719941299
+      examples:
+        sampleTimestampedMessage:
+          summary: "Similar to Message, but this time a timestamp has been added to the object, signifiying when the message was sent"
+          value:
+            timestampedMessage:
+              - role: "assistant"
+                content: "Hello there! How may I be of assistance?"
+                timestamp: 1719941299
 
     SuccessfulRequest:
       title: "Successful Request"
