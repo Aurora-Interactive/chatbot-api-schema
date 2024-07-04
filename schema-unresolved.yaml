@@ -119,7 +119,8 @@ paths:
       summary: "Character metadata"
       description: "Return metadata for all the available characters in the system"
       operationId: "getCharacters"
-      x-speakeasy-name-override: "allCharacters"
+      x-speakeasy-group: "characters"
+      x-speakeasy-name-override: "list"
       tags:
         - Characters
       parameters:
@@ -168,7 +169,8 @@ paths:
       summary: "Character image visuals"
       description: "Get the banner and profile icon that is assigned to a given character"
       operationId: "getCharacterImageData"
-      x-speakeasy-name-override: "imageData"
+      x-speakeasy-group: "characters"
+      x-speakeasy-name-override: "getImageData"
       tags:
         - Characters
       parameters:
@@ -204,7 +206,8 @@ paths:
       summary: "Character AI initialization data"
       description: "Get the context prompt and initial message that is associated with the given character"
       operationId: "getCharacterAiInitializationData"
-      x-speakeasy-name-override: "aiInitializationData"
+      x-speakeasy-group: "characters"
+      x-speakeasy-name-override: "getAiInitializationData"
       tags:
         - Characters
       parameters:
@@ -247,7 +250,8 @@ paths:
       summary: "Get all chats assigned to user"
       description: "Get the chat IDs assigned to a given user ID. useful for getting chat context and message history"
       operationId: "getChatsForUser"
-      x-speakeasy-name-override: "allChatsForUser"
+      x-speakeasy-group: "chats"
+      x-speakeasy-name-override: "listForUser"
       tags:
         - Chats
       parameters:
@@ -290,7 +294,8 @@ paths:
       summary: "Initialize chat with AI character"
       description: "Initialize a chat with a given AI character, including storing the character's initial response as a message in our system."
       operationId: "initializeChat"
-      x-speakeasy-name-override: "createNew"
+      x-speakeasy-group: "chats"
+      x-speakeasy-name-override: "initialize"
       tags:
         - Chats
       parameters:
@@ -335,7 +340,8 @@ paths:
       summary: "Save chat message"
       description: "Save chat message either from the initial context prompt or after AI generation"
       operationId: "saveMessage"
-      x-speakeasy-name-override: "saveNew"
+      x-speakeasy-group: "messages"
+      x-speakeasy-name-override: "save"
       tags:
         - Messages
       parameters:
@@ -382,7 +388,8 @@ paths:
       summary: "Get full message history"
       description: "Get all of the messages sent in a given chat"
       operationId: "getMessageHistory"
-      x-speakeasy-name-override: "messageHistory"
+      x-speakeasy-group: "messages"
+      x-speakeasy-name-override: "history"
       tags:
         - Messages
       parameters:
@@ -437,7 +444,8 @@ paths:
       summary: "Get chat context"
       description: "Get all the messages from a given chat that are allocated to be used as AI model context. Almost always less messages than full chat history for performance reasons when running against our AI model."
       operationId: "getMessageContext"
-      x-speakeasy-name-override: "messageContext"
+      x-speakeasy-group: "messages"
+      x-speakeasy-name-override: "context"
       tags:
         - Messages
       parameters:
@@ -492,7 +500,8 @@ paths:
       summary: "Create character"
       description: "Upload character data to our system"
       operationId: "createCharacter"
-      x-speakeasy-name-override: "createNew"
+      x-speakeasy-group: "characters"
+      x-speakeasy-name-override: "create"
       tags:
         - Characters
       parameters:
@@ -546,6 +555,7 @@ paths:
       summary: "Send message"
       description: "Send a chat message to a particular chat for a response"
       operationId: "sendMessage"
+      x-speakeasy-group: "messages"
       x-speakeasy-name-override: "send"
       tags:
         - Messages
@@ -618,6 +628,7 @@ paths:
       summary: "Delete message"
       description: "Remove message from message history, given a message ID"
       operationId: "deleteMessage"
+      x-speakeasy-group: "messages"
       x-speakeasy-name-override: "delete"
       tags:
         - Messages
@@ -665,6 +676,7 @@ paths:
       summary: "Delete a chat"
       description: "Delete a chat, given a chat ID. All message history that is still stored is also deleted"
       operationId: "deleteChat"
+      x-speakeasy-group: "chats"
       x-speakeasy-name-override: "delete"
       tags:
         - Chats
