@@ -711,9 +711,7 @@ components:
       examples:
         sampleMessageId:
           summary: "Integer ID uniquely tied to a message"
-          value:
-            messageId:
-              - messageId: 8
+          value: 8
 
     ChatId:
       name: "chatId"
@@ -724,9 +722,7 @@ components:
       examples:
         sampleChatId:
           summary: "Integer ID uniquely tied to a chat"
-          value:
-            chatId:
-              - chatId: 8
+          value: 8
 
     AccessToken:
       name: "x-access-token"
@@ -738,9 +734,7 @@ components:
       examples:
         sampleAccessToken:
           summary: "Secret string-type token that allows the user to use authenticated API endpoints"
-          value:
-            accessToken:
-              - "x-access-token": wcdE8dGPZEshG6B8E5uGpgALr5LzwPX5AqZFKAZsfcvzuHVf
+          value: wcdE8dGPZEshG6B8E5uGpgALr5LzwPX5AqZFKAZsfcvzuHVf
       x-speakeasy-globals-hidden: true
 
     CharacterId:
@@ -752,9 +746,7 @@ components:
       examples:
         sampleCharacterId:
           summary: "Integer ID uniquely tied to a character"
-          value:
-            characterId:
-              - characterId: 8
+          value: 8
 
   schemas:
     UnauthorizedIdResponse:
