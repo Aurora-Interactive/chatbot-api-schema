@@ -589,9 +589,7 @@ paths:
                 enum: ["chunked"]
           content:
             text/event-stream:
-              examples:
-                sampleToken:
-                  value: "data: {\"content\":\"Rev\"}"
+              example: "data: {\"content\":\"Rev\"}"
               schema:
                 type: string
                 summary: "Stream of live token data"
@@ -720,10 +718,7 @@ components:
       required: true
       schema:
         type: integer
-      examples:
-        sampleMessageId:
-          summary: "Integer ID uniquely tied to a message"
-          value: 8
+      example: 8
 
     ChatId:
       name: "chatId"
@@ -731,10 +726,7 @@ components:
       required: true
       schema:
         type: integer
-      examples:
-        sampleChatId:
-          summary: "Integer ID uniquely tied to a chat"
-          value: 8
+      example: 8
 
     AccessToken:
       name: "x-access-token"
@@ -755,10 +747,7 @@ components:
       required: true
       schema:
         type: integer
-      examples:
-        sampleCharacterId:
-          summary: "Integer ID uniquely tied to a character"
-          value: 8
+      example: 8
 
   schemas:
     UnauthorizedIdResponse:
@@ -774,12 +763,8 @@ components:
             type: string
             enum: ["Chat or message does not belong to this user"]
       examples:
-        - sampleResponse:
-            summary: "The resource the user was trying to access does not belong to them"
-            value:
-              errorResponse:
-                - success: false
-                  error: "Chat or message does not belong to this user"
+        - success: false
+          error: "Chat or message does not belong to this user"
           
     DuplicateSignupError:
       type: object
@@ -790,11 +775,7 @@ components:
           type: string
           enum: ["Username or email already in use"]
       examples:
-        - sampleResponse:
-            summary: "The given email/username is already registerd in our system"
-            value:
-              errorMessage:
-                - error: "Username or email already in use"
+        - error: "Username or email already in use"
 
     AccountInBadStandingResponse:
       title: "Account In Bad Standing Error"
@@ -809,12 +790,8 @@ components:
               type: string
               enum: ["Account associated with this access token is not subscribed to a paid plan"]
       examples:
-        - sampleResponse:
-            summary: "User isn't subscribed to our services and thus is not allowed to operate on paid endpoints."
-            value:
-              errorMessage:
-                - success: false
-                  error: "Account associated with this access token is not subscribed to a paid plan"
+        - success: false
+          error: "Account associated with this access token is not subscribed to a paid plan"
 
     AuthenticationFailedResponse:
       title: "Unauthorized Error"
@@ -829,12 +806,8 @@ components:
               type: string
               enum: ["Invalid username, password, or access token"]
       examples:
-        - sampleResponse:
-            summary: "User entered invalid username, password, or access token"
-            value:
-              errorMessage:
-                - success: false
-                  error: "Invalid username, password, or access token"
+        - success: false
+          error: "Invalid username, password, or access token"
 
     InvalidRequestResponse:
       title: "Invalid Request Error"
@@ -849,12 +822,8 @@ components:
               type: string
               enum: ["One or more API parameters are malformed. Please check your request and try again"]
       examples:
-        - sampleResponse:
-            summary: "The given API parameters are malformed or otherwise invalid"
-            value:
-              errorMessage:
-                - success: false
-                  error: "One or more API parameters are malformed. Please check your request and try again"
+        - success: false
+          error: "One or more API parameters are malformed. Please check your request and try again"
 
     InvalidMessageId:
       title: "Invalid Message ID Error"
@@ -868,12 +837,8 @@ components:
               type: string
               enum: ["Invalid message ID"]
       examples:
-        - sampleResponse:
-            summary: "The given message ID is invalid"
-            value:
-              errorMessage:
-                - success: false
-                  error: "Invalid message ID"
+        - success: false
+          error: "Invalid message ID"
 
     InvalidChatId:
       title: "Invalid Chat ID Error"
@@ -885,12 +850,8 @@ components:
           type: string
           enum: ["Invalid chat ID"]
       examples:
-        - sampleResponse:
-            summary: "The given chat ID is invalid"
-            value:
-              errorMessage:
-                - success: false
-                  error: "Invalid chat ID"
+        - success: false
+          error: "Invalid chat ID"
 
     AccessTokenResponse:
       title: "Access Token Response"
@@ -903,11 +864,8 @@ components:
             accessToken:
               type: string
       examples:
-        - sampleAccessTokenResponse:
-            summary: "Example response containing the user's access token"
-            value:
-              - success: true
-                accessToken: "aGAuT24GwDiwNzSqrqHXspyo4zyCEFzFm5frvywaWDkHRPUy"
+        - success: true
+          accessToken: "aGAuT24GwDiwNzSqrqHXspyo4zyCEFzFm5frvywaWDkHRPUy"
 
     CharacterOverview:
       title: "Character Overview Response"
@@ -919,12 +877,8 @@ components:
         description:
           type: string
       examples:
-        - sampleCharacterOverview:
-            summary: "Name and description of a character"
-            value:
-              characterOverview:
-                - name: "Morlen"
-                  description: "You would love to see a detailed description, wouldn't you? Sorry, not here."
+        - name: "Morlen"
+          description: "You would love to see a detailed description, wouldn't you? Sorry, not here."
           
     CharacterId:
       title: "Character Id Response"
@@ -934,11 +888,7 @@ components:
         characterId:
           type: integer
       examples:
-        - sampleCharacterId:
-            summary: "Character ID, which is uniquely tied to a character"
-            value:
-              characterId:
-                - characterId: 8
+        - characterId: 8
               
     ChatId:
       title: "Chat ID Response"
@@ -948,11 +898,7 @@ components:
         chatId:
           type: integer
       examples:
-        - sampleChatId:
-            summary: "ID uniquely tied to a given chat"
-            value:
-              chatId:
-                chatId: 8
+        - chatId: 8
 
     CharacterImageData:
       title: "Character Image Data Response"
@@ -968,12 +914,8 @@ components:
           description: "base64-encoded AVIF image data"
           examples: ["AAABAAEAAAAAAAEACAA"]
       examples:
-        - sampleCharacterImageData:
-            summary: "Banner and PFP of a character"
-            value:
-              characterImageData:
-                - iconImage: "AAABAAEAAAAAAAEACAA"
-                  bannerImage: "AAABAAEAAAAAAAEACAA"
+        - iconImage: "AAABAAEAAAAAAAEACAA"
+          bannerImage: "AAABAAEAAAAAAAEACAA"
 
     CharacterAiInitializationData:
       title: "CharacterAiInitializationData"
@@ -985,12 +927,8 @@ components:
         initialResponse:
           type: string
       examples:
-        - sampleCharacterAiInitializationData:
-            summary: "AI prompt and initial response of a character"
-            value:
-              characterImageData:
-                - iconImage: "you are a helpful assistant and companion"
-                  bannerImage: "Hello, there! How may I be of assistance?"
+        - aiPrompt: "you are a helpful assistant and companion"
+          initialResponse: "Hello, there! How may I be of assistance?"
           
     DuplicateCharacterError:
       title: "Duplicate Character Error Response"
@@ -1003,12 +941,8 @@ components:
               type: string
               enum: ["Character with this name already exists"]
       examples:
-        - sampleDuplicateCharacterError:
-            summary: "The character with the same already exists and thus can't be created"
-            value:
-              duplicateCharacterError:
-                - success: false
-                  error: "Character with this name already exists"
+        - success: false
+          error: "Character with this name already exists"
 
     Message:
       title: "Messages Response"
@@ -1021,12 +955,8 @@ components:
         content:
           type: string
       examples:
-        - sampleMessage:
-            summary: "Object that represents a message, holding its string contents and the sender"
-            value:
-              message:
-                - role: "assistant"
-                  content: "Hello there! How may I be of assistance?"
+        - role: "assistant"
+          content: "Hello there! How may I be of assistance?"
 
     TimestampedMessage:
       title: "Timestamped Message Response"
@@ -1039,13 +969,9 @@ components:
               type: integer
               examples: [1719363309]
       examples:
-        - sampleTimestampedMessage:
-            summary: "Similar to Message, but this time a timestamp has been added to the object, signifiying when the message was sent"
-            value:
-              timestampedMessage:
-                - role: "assistant"
-                  content: "Hello there! How may I be of assistance?"
-                  timestamp: 1719941299
+        - role: "assistant"
+          content: "Hello there! How may I be of assistance?"
+          timestamp: 1719941299
 
     SuccessfulRequest:
       title: "Successful Request"
@@ -1056,11 +982,7 @@ components:
           type: boolean
           default: true
       examples:
-        - sampleSuccess:
-            summary: "The request this objec's properties were included in succeeded"
-            value:
-              success:
-                - success: true
+        - success: true
 
     FailedRequest:
       title: "Failed Request"
@@ -1071,11 +993,7 @@ components:
           type: boolean
           default: false
       examples:
-        - sampleFailed:
-            summary: "The request this objec's properties were included in failed"
-            value:
-              failed:
-                - success: false
+       - success: false
 
 tags:
   - name: "Characters"
