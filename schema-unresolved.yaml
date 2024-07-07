@@ -1,6 +1,6 @@
 openapi: 3.1.0
 info:
-  version: 3.0.1
+  version: 3.0.2
   title: "AI Chatbot REST API"
   description: "AI Chatbot REST API used in storing and executing AI chat completions in a personalized and conversational manner. It comes with support for streaming chat responses."
   contact:
@@ -953,12 +953,17 @@ components:
 
     ChatCompletionFragment:
       type: object
-      required: ["content"]
+      required: ["data"]
       properties:
-        content:
-          type: string
+        data:
+          type: object
+          required: ["content"]
+          properties:
+            content:
+              type: string
       examples:
-        - content: "Rev"
+        - data:
+            content: "Rev"
 
     TimestampedMessage:
       title: "Timestamped Message Response"
