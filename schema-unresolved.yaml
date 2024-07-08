@@ -8,7 +8,7 @@ info:
     email: "bdpaboi123@gmail.com"
     
 servers:
-  - url: "https://api.chatbot.aurora-interactive.online"
+  - url: "https://api.chatbot.aurora-interactive.online:8443"
     description: "Main API Server"
     
 x-speakeasy-retries:
