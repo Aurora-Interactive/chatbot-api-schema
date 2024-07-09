@@ -1,6 +1,6 @@
 openapi: 3.1.0
 info:
-  version: 3.0.2
+  version: 3.1.0
   title: "AI Chatbot REST API"
   description: "AI Chatbot REST API used in storing and executing AI chat completions in a personalized and conversational manner. It comes with support for streaming chat responses."
   contact:
@@ -29,7 +29,6 @@ x-speakeasy-globals:
 paths:
   /api/v3/login:
     post:
-      x-speakeasy-ignore: true
       summary: "Username and password login"
       description: "Login and retrieve a reusable access token for use with the rest of the API"
       operationId: "login"
@@ -70,7 +69,6 @@ paths:
 
   /api/v2/signup:
     post:
-      x-speakeasy-ignore: true
       summary: "User signup"
       description: "Create a user account"
       operationId: "signup"
