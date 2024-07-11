@@ -31,7 +31,7 @@ paths:
     statusCodes:
       - 5XX
 
-  /api/v3/login:
+  /api/v4/login:
     post:
       summary: "Username and password login"
       description: "Login and retrieve a reusable access token for use with the rest of the API"
@@ -116,7 +116,7 @@ paths:
                   - $ref: "#/components/schemas/FailedRequest"
                   - $ref: "#/components/schemas/DuplicateSignupError"
 
-  /api/v3/characters:
+  /api/v4/characters:
     get:
       summary: "Character metadata"
       description: "Return metadata for available characters in the system. Paginated. Up to 100 characters per request"
@@ -182,7 +182,7 @@ paths:
               schema:
                 $ref: "#/components/schemas/AuthenticationFailedResponse"
 
-  /api/v3/characterImageData:
+  /api/v4/characterImageData:
     get:
       summary: "Character image visuals"
       description: "Get the banner and profile icon that is assigned to a given character"
@@ -219,7 +219,7 @@ paths:
               schema:
                 $ref: "#/components/schemas/AuthenticationFailedResponse"
 
-  /api/v3/characterAiInitializationData:
+  /api/v4/characterAiInitializationData:
     get:
       summary: "Character AI initialization data"
       description: "Get the context prompt and initial message that is associated with the given character"
@@ -263,7 +263,7 @@ paths:
               schema:
                 $ref: "#/components/schemas/AccountInBadStandingResponse"
 
-  /api/v3/allChatsForUser:
+  /api/v4/allChatsForUser:
     get:
       summary: "Get all chats assigned to user"
       description: "Get the chat IDs assigned to a given user ID. useful for getting chat context and message history"
@@ -307,7 +307,7 @@ paths:
               schema:
                 $ref: "#/components/schemas/AuthenticationFailedResponse"
 
-  /api/v3/initializeChat:
+  /api/v4/initializeChat:
     post:
       summary: "Initialize chat with AI character"
       description: "Initialize a chat with a given AI character, including storing the character's initial response as a message in our system."
@@ -353,7 +353,7 @@ paths:
               schema:
                 $ref: "#/components/schemas/AccountInBadStandingResponse"
 
-  /api/v3/saveMessage:
+  /api/v4/saveMessage:
     post:
       summary: "Save chat message"
       description: "Save chat message either from the initial context prompt or after AI generation"
@@ -401,7 +401,7 @@ paths:
               schema:
                 $ref: "#/components/schemas/AccountInBadStandingResponse"
 
-  /api/v3/getMessageHistory:
+  /api/v4/getMessageHistory:
     get:
       summary: "Get full message history"
       description: "Get all of the messages sent in a given chat"
@@ -457,7 +457,7 @@ paths:
               schema:
                 $ref: "#/components/schemas/AccountInBadStandingResponse"
 
-  /api/v3/getMessageContext:
+  /api/v4/getMessageContext:
     get:
       summary: "Get chat context"
       description: "Get all the messages from a given chat that are allocated to be used as AI model context. Almost always less messages than full chat history for performance reasons when running against our AI model."
@@ -513,7 +513,7 @@ paths:
               schema:
                 $ref: "#/components/schemas/AccountInBadStandingResponse"
 
-  /api/v3/createCharacter:
+  /api/v4/createCharacter:
     post:
       summary: "Create character"
       description: "Upload character data to our system"
@@ -568,7 +568,7 @@ paths:
               schema:
                 $ref: "#/components/schemas/AccountInBadStandingResponse"
 
-  /api/v3/sendMessage:
+  /api/v4/sendMessage:
     post:
       summary: "Send message"
       description: "Send a chat message to a particular chat for a response"
@@ -632,7 +632,7 @@ paths:
               schema:
                 $ref: "#/components/schemas/AccountInBadStandingResponse"
 
-  /api/v3/deleteMessage:
+  /api/v4/deleteMessage:
     delete:
       summary: "Delete message"
       description: "Remove message from message history, given a message ID"
@@ -680,7 +680,7 @@ paths:
               schema:
                 $ref: "#/components/schemas/AccountInBadStandingResponse"
 
-  /api/v3/deleteChat:
+  /api/v4/deleteChat:
     delete:
       summary: "Delete a chat"
       description: "Delete a chat, given a chat ID. All message history that is still stored is also deleted"
