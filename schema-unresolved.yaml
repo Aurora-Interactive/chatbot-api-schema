@@ -1,6 +1,6 @@
 openapi: 3.1.0
 info:
-  version: 3.1.1
+  version: 4.0.0
   title: "AI Chatbot REST API"
   description: "AI Chatbot REST API used in storing and executing AI chat completions in a personalized and conversational manner. It comes with support for streaming chat responses."
   contact:
@@ -116,10 +116,10 @@ paths:
                   - $ref: "#/components/schemas/FailedRequest"
                   - $ref: "#/components/schemas/DuplicateSignupError"
 
-  /api/v3/allCharacters:
+  /api/v3/characters:
     get:
       summary: "Character metadata"
-      description: "Return metadata for all the available characters in the system"
+      description: "Return metadata for available characters in the system. Paginated. Up to 100 characters per request"
       operationId: "getCharacters"
       x-speakeasy-group: "characters"
       x-speakeasy-name-override: "list"
@@ -127,6 +127,19 @@ paths:
         - Characters
       parameters:
         - $ref: "#/components/parameters/AccessToken"
+        - name: "numCharacters"
+          in: query
+          required: true
+          schema:
+            type: integer
+          example: 25
+        - name: "from"
+          in: query
+          description: "Character ID to start results from (useful in pagination)"
+          required: false
+          schema:
+            type: integer
+          example: 150
 
       responses:
         "200":
@@ -137,7 +150,7 @@ paths:
                 allOf:
                   - $ref: "#/components/schemas/SuccessfulRequest"
                   - type: object
-                    required: ["characters"]
+                    required: ["characters", "isEndOfList"]
                     properties:
                       characters:
                         type: array
@@ -151,6 +164,9 @@ paths:
                                   type: boolean
                                 id:
                                   type: integer
+                      isEndOfList:
+                        type: boolean
+                        summary: "Whether there aren't any more characters left to query"
 
         "400":
           description: "Bad request"
