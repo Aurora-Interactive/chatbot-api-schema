@@ -626,7 +626,6 @@ paths:
           application/json:
             schema:
               allOf:
-                - $ref: "#/components/schemas/ChatId"
                 - $ref: "#/components/schemas/CharacterId"
                 - type: object
                   required: ["message", "context"]
