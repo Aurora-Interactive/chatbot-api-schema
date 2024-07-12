@@ -1,8 +1,8 @@
 openapi: 3.1.0
 info:
   version: 4.0.0
-  title: "AI Chatbot REST API"
-  description: "AI Chatbot REST API used in storing and executing AI chat completions in a personalized and conversational manner. It comes with support for streaming chat responses."
+  title: "Aurora AI Chat REST API"
+  description: "REST API used in storing and executing AI chat completions in a personalized and conversational manner. It comes with support for streaming chat responses."
   contact:
     name: "Antonios Papadakis"
     email: "bdpaboi123@gmail.com"
@@ -33,7 +33,7 @@ paths:
 
   /api/v4/login:
     post:
-      summary: "Username and password login"
+      summary: "Login"
       description: "Login and retrieve a reusable access token for use with the rest of the API"
       operationId: "login"
       tags: ["Users"]
@@ -71,7 +71,7 @@ paths:
               schema:
                 $ref: "#/components/schemas/AuthenticationFailedResponse"
 
-  /api/v2/signup:
+  /api/v4/signup:
     post:
       summary: "User signup"
       description: "Create a user account"
@@ -182,7 +182,7 @@ paths:
               schema:
                 $ref: "#/components/schemas/AuthenticationFailedResponse"
 
-  /api/v4/characterImageData:
+  /api/v4/characters/imageData:
     get:
       summary: "Character image visuals"
       description: "Get the banner and profile icon that is assigned to a given character"
@@ -219,7 +219,7 @@ paths:
               schema:
                 $ref: "#/components/schemas/AuthenticationFailedResponse"
 
-  /api/v4/characterAiInitializationData:
+  /api/v4/characters/aiInitializationData:
     get:
       summary: "Character AI initialization data"
       description: "Get the context prompt and initial message that is associated with the given character"
@@ -263,7 +263,7 @@ paths:
               schema:
                 $ref: "#/components/schemas/AccountInBadStandingResponse"
 
-  /api/v4/allChatsForUser:
+  /api/v4/chats:
     get:
       summary: "Get all chats assigned to user"
       description: "Get the chat IDs assigned to a given user ID. useful for getting chat context and message history"
@@ -307,7 +307,7 @@ paths:
               schema:
                 $ref: "#/components/schemas/AuthenticationFailedResponse"
 
-  /api/v4/initializeChat:
+  /api/v4/chat:
     post:
       summary: "Initialize chat with AI character"
       description: "Initialize a chat with a given AI character, including storing the character's initial response as a message in our system."
@@ -353,7 +353,47 @@ paths:
               schema:
                 $ref: "#/components/schemas/AccountInBadStandingResponse"
 
-  /api/v4/saveMessage:
+    delete:
+      summary: "Delete a chat"
+      description: "Delete a chat, given a chat ID. All message history that is still stored is also deleted"
+      operationId: "deleteChat"
+      x-speakeasy-group: "chats"
+      x-speakeasy-name-override: "delete"
+      tags:
+        - Chats
+      parameters:
+        - $ref: "#/components/parameters/AccessToken"
+        - $ref: "#/components/parameters/ChatId"
+      
+      responses:
+        "200":
+          description: "Chat and all relevant data deleted successfully"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SuccessfulRequest"
+                
+        "400":
+          description: "Bad request"
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - $ref: "#/components/schemas/InvalidRequestResponse"
+                  - allOf:
+                    - $ref: "#/components/schemas/FailedRequest"
+                    - $ref: "#/components/schemas/InvalidChatId"
+
+        "401":
+          description: "Unauthorized"
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - $ref: "#/components/schemas/AuthenticationFailedResponse"
+                  - $ref: "#/components/schemas/UnauthorizedIdResponse"
+
+  /api/v4/message/save:
     post:
       summary: "Save chat message"
       description: "Save chat message either from the initial context prompt or after AI generation"
@@ -401,7 +441,7 @@ paths:
               schema:
                 $ref: "#/components/schemas/AccountInBadStandingResponse"
 
-  /api/v4/getMessageHistory:
+  /api/v4/message/history:
     get:
       summary: "Get full message history"
       description: "Get all of the messages sent in a given chat"
@@ -457,7 +497,7 @@ paths:
               schema:
                 $ref: "#/components/schemas/AccountInBadStandingResponse"
 
-  /api/v4/getMessageContext:
+  /api/v4/message/context:
     get:
       summary: "Get chat context"
       description: "Get all the messages from a given chat that are allocated to be used as AI model context. Almost always less messages than full chat history for performance reasons when running against our AI model."
@@ -513,7 +553,7 @@ paths:
               schema:
                 $ref: "#/components/schemas/AccountInBadStandingResponse"
 
-  /api/v4/createCharacter:
+  /api/v4/character:
     post:
       summary: "Create character"
       description: "Upload character data to our system"
@@ -568,7 +608,7 @@ paths:
               schema:
                 $ref: "#/components/schemas/AccountInBadStandingResponse"
 
-  /api/v4/sendMessage:
+  /api/v4/message:
     post:
       summary: "Send message"
       description: "Send a chat message to a particular chat for a response"
@@ -585,6 +625,7 @@ paths:
             schema:
               allOf:
                 - $ref: "#/components/schemas/ChatId"
+                - $ref: "#/components/schemas/CharacterId"
                 - type: object
                   required: ["message", "context"]
                   properties:
@@ -632,7 +673,6 @@ paths:
               schema:
                 $ref: "#/components/schemas/AccountInBadStandingResponse"
 
-  /api/v4/deleteMessage:
     delete:
       summary: "Delete message"
       description: "Remove message from message history, given a message ID"
@@ -680,47 +720,6 @@ paths:
               schema:
                 $ref: "#/components/schemas/AccountInBadStandingResponse"
 
-  /api/v4/deleteChat:
-    delete:
-      summary: "Delete a chat"
-      description: "Delete a chat, given a chat ID. All message history that is still stored is also deleted"
-      operationId: "deleteChat"
-      x-speakeasy-group: "chats"
-      x-speakeasy-name-override: "delete"
-      tags:
-        - Chats
-      parameters:
-        - $ref: "#/components/parameters/AccessToken"
-        - $ref: "#/components/parameters/ChatId"
-      
-      responses:
-        "200":
-          description: "Chat and all relevant data deleted successfully"
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/SuccessfulRequest"
-                
-        "400":
-          description: "Bad request"
-          content:
-            application/json:
-              schema:
-                oneOf:
-                  - $ref: "#/components/schemas/InvalidRequestResponse"
-                  - allOf:
-                    - $ref: "#/components/schemas/FailedRequest"
-                    - $ref: "#/components/schemas/InvalidChatId"
-
-        "401":
-          description: "Unauthorized"
-          content:
-            application/json:
-              schema:
-                oneOf:
-                  - $ref: "#/components/schemas/AuthenticationFailedResponse"
-                  - $ref: "#/components/schemas/UnauthorizedIdResponse"
-
 components:
   parameters:
     MessageId:
@@ -762,7 +761,6 @@ components:
 
   schemas:
     UnauthorizedIdResponse:
-      title: "Unauthorized ID Response"
       x-speakeasy-name-override: "UnauthorizedIdError"
       allOf:
       - $ref: "#/components/schemas/FailedRequest"
@@ -779,7 +777,6 @@ components:
           
     DuplicateSignupError:
       type: object
-      title: "Duplicate Signup Error"
       required: ["error"]
       properties:
         error:
@@ -805,7 +802,6 @@ components:
           error: "Account associated with this access token is not subscribed to a paid plan"
 
     AuthenticationFailedResponse:
-      title: "Unauthorized Error"
       x-speakeasy-name-override: "AuthenticationFailedError"
       allOf:
         - $ref: "#/components/schemas/FailedRequest"
@@ -821,7 +817,6 @@ components:
           error: "Invalid username, password, or access token"
 
     InvalidRequestResponse:
-      title: "Invalid Request Error"
       x-speakeasy-name-override: "BadRequestError"
       allOf:
         - $ref: "#/components/schemas/FailedRequest"
@@ -837,7 +832,6 @@ components:
           error: "One or more API parameters are malformed. Please check your request and try again"
 
     InvalidMessageId:
-      title: "Invalid Message ID Error"
       x-speakeasy-name-override: "InvalidMessageIdError"
       allOf:
         - $ref: "#/components/schemas/FailedRequest"
@@ -852,7 +846,6 @@ components:
           error: "Invalid message ID"
 
     InvalidChatId:
-      title: "Invalid Chat ID Error"
       x-speakeasy-name-override: "InvalidChatIdError"
       type: object
       required: ["error"]
@@ -865,7 +858,6 @@ components:
           error: "Invalid chat ID"
 
     AccessTokenResponse:
-      title: "Access Token Response"
       x-speakeasy-name-override: "AccessTokenObj"
       allOf:
         - $ref: "#/components/schemas/SuccessfulRequest"
@@ -879,7 +871,6 @@ components:
           accessToken: "aGAuT24GwDiwNzSqrqHXspyo4zyCEFzFm5frvywaWDkHRPUy"
 
     CharacterOverview:
-      title: "Character Overview Response"
       type: object
       required: ["name", "description"]
       properties:
@@ -890,9 +881,8 @@ components:
       examples:
         - name: "Morlen"
           description: "You would love to see a detailed description, wouldn't you? Sorry, not here."
-          
+
     CharacterId:
-      title: "Character Id Response"
       type: object
       required: ["characterId"]
       properties:
@@ -900,9 +890,8 @@ components:
           type: integer
       examples:
         - characterId: 8
-              
+
     ChatId:
-      title: "Chat ID Response"
       type: object
       required: ["chatId"]
       properties:
@@ -981,7 +970,7 @@ components:
               type: string
       examples:
         - data:
-            content: "Rev"
+          content: "Rev"
 
     TimestampedMessage:
       title: "Timestamped Message Response"
