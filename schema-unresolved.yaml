@@ -330,7 +330,9 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/SuccessfulRequest"
+                allOf:
+                  - $ref: "#/components/schemas/SuccessfulRequest"
+                  - $ref: "#/components/schemas/ChatId"
 
         "400":
           description: "Bad request"
