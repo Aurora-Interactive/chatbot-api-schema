@@ -219,50 +219,6 @@ paths:
               schema:
                 $ref: "#/components/schemas/AuthenticationFailedResponse"
 
-  /api/v4/characters/aiInitializationData:
-    get:
-      summary: "Character AI initialization data"
-      description: "Get the context prompt and initial message that is associated with the given character"
-      operationId: "getCharacterAiInitializationData"
-      x-speakeasy-group: "characters"
-      x-speakeasy-name-override: "getAiInitializationData"
-      tags:
-        - Characters
-      parameters:
-        - $ref: "#/components/parameters/AccessToken"
-        - $ref: "#/components/parameters/CharacterId"
-
-      responses:
-        "200":
-          description: "Character AI initialization data"
-          content:
-            application/json:
-              schema:
-                allOf:
-                  - $ref: "#/components/schemas/CharacterAiInitializationData"
-                  - $ref: "#/components/schemas/SuccessfulRequest"
-
-        "400":
-          description: "Bad request"
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/InvalidRequestResponse"
-
-        "401":
-          description: "Unauthorized"
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/AuthenticationFailedResponse"
-
-        "402":
-          description: "User is not paying for a subscription"
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/AccountInBadStandingResponse"
-
   /api/v4/chats:
     get:
       summary: "Get all chats assigned to user"
