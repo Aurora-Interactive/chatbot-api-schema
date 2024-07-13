@@ -10,7 +10,7 @@ info:
 servers:
   - url: "https://api.chatbot.aurora-interactive.online:8443"
     description: "Main API Server"
-    
+
 x-speakeasy-retries:
   strategy: backoff
   backoff:
@@ -21,7 +21,7 @@ x-speakeasy-retries:
   statusCodes:
     - 5XX
   retryConnectionErrors: true
-  
+
 x-speakeasy-globals:
   parameters:
     - $ref: "#/components/parameters/AccessToken"
@@ -322,7 +322,7 @@ paths:
       parameters:
         - $ref: "#/components/parameters/AccessToken"
         - $ref: "#/components/parameters/ChatId"
-      
+
       responses:
         "200":
           description: "Chat and all relevant data deleted successfully"
@@ -330,7 +330,7 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/SuccessfulRequest"
-                
+
         "400":
           description: "Bad request"
           content:
@@ -641,7 +641,7 @@ paths:
       parameters:
         - $ref: "#/components/parameters/AccessToken"
         - $ref: "#/components/parameters/MessageId"
-      
+
       responses:
         "200":
           description: "Message was deleted successfully"
