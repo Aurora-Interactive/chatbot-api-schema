@@ -589,7 +589,7 @@ paths:
   /api/v4/message:
     post:
       summary: "Send message"
-      description: "Send a chat message to a particular chat for a response"
+      description: "Send a message to a particular chat for a response"
       operationId: "sendMessage"
       x-speakeasy-group: "messages"
       x-speakeasy-name-override: "send"
@@ -603,6 +603,7 @@ paths:
             schema:
               allOf:
                 - $ref: "#/components/schemas/CharacterId"
+                - $ref: "#/components/schemas/ChatId"
                 - type: object
                   required: ["message", "context"]
                   properties:
