@@ -6,7 +6,7 @@ info:
   contact:
     name: "Antonios Papadakis"
     email: "bdpaboi123@gmail.com"
-    
+
 servers:
   - url: "https://api.chatbot.aurora-interactive.online:8443"
     description: "Main API Server"
@@ -742,10 +742,7 @@ components:
           error:
             type: string
             enum: ["Chat or message does not belong to this user"]
-      examples:
-        - success: false
-          error: "Chat or message does not belong to this user"
-          
+
     DuplicateSignupError:
       type: object
       required: ["error"]
@@ -753,8 +750,6 @@ components:
         error:
           type: string
           enum: ["Username or email already in use"]
-      examples:
-        - error: "Username or email already in use"
 
     AccountInBadStandingResponse:
       title: "Account In Bad Standing Error"
@@ -768,9 +763,6 @@ components:
             error:
               type: string
               enum: ["Account associated with this access token is not subscribed to a paid plan"]
-      examples:
-        - success: false
-          error: "Account associated with this access token is not subscribed to a paid plan"
 
     AuthenticationFailedResponse:
       x-speakeasy-name-override: "AuthenticationFailedError"
@@ -783,9 +775,6 @@ components:
             error:
               type: string
               enum: ["Invalid username, password, or access token"]
-      examples:
-        - success: false
-          error: "Invalid username, password, or access token"
 
     InvalidRequestResponse:
       x-speakeasy-name-override: "BadRequestError"
@@ -798,9 +787,6 @@ components:
             error:
               type: string
               enum: ["One or more API parameters are malformed. Please check your request and try again"]
-      examples:
-        - success: false
-          error: "One or more API parameters are malformed. Please check your request and try again"
 
     InvalidMessageId:
       x-speakeasy-name-override: "InvalidMessageIdError"
@@ -812,9 +798,6 @@ components:
             error:
               type: string
               enum: ["Invalid message ID"]
-      examples:
-        - success: false
-          error: "Invalid message ID"
 
     InvalidChatId:
       x-speakeasy-name-override: "InvalidChatIdError"
@@ -824,9 +807,6 @@ components:
         error:
           type: string
           enum: ["Invalid chat ID"]
-      examples:
-        - success: false
-          error: "Invalid chat ID"
 
     AccessTokenResponse:
       x-speakeasy-name-override: "AccessTokenObj"
@@ -837,9 +817,6 @@ components:
           properties:
             accessToken:
               type: string
-      examples:
-        - success: true
-          accessToken: "aGAuT24GwDiwNzSqrqHXspyo4zyCEFzFm5frvywaWDkHRPUy"
 
     CharacterOverview:
       type: object
@@ -849,9 +826,6 @@ components:
           type: string
         description:
           type: string
-      examples:
-        - name: "Morlen"
-          description: "You would love to see a detailed description, wouldn't you? Sorry, not here."
 
     CharacterId:
       type: object
@@ -859,8 +833,6 @@ components:
       properties:
         characterId:
           type: integer
-      examples:
-        - characterId: 8
 
     ChatId:
       type: object
@@ -868,18 +840,14 @@ components:
       properties:
         chatId:
           type: integer
-      examples:
-        - chatId: 8
 
     CharacterImageData:
-      title: "Character Image Data Response"
       type: object
       required: ["iconImage", "bannerImage"]
       properties:
         iconImage:
           type: string
           description: "base64-encoded AVIF image data"
-          examples: ["AAABAAEAAAAAAAEACAA"]
         bannerImage:
           type: string
           description: "base64-encoded AVIF image data"
@@ -894,9 +862,6 @@ components:
             error:
               type: string
               enum: ["Character with this name already exists"]
-      examples:
-        - success: false
-          error: "Character with this name already exists"
 
     Message:
       title: "Messages Response"
@@ -908,9 +873,6 @@ components:
           enum: ["system", "user", "assistant"]
         content:
           type: string
-      examples:
-        - role: "assistant"
-          content: "Hello there! How may I be of assistance?"
 
     ChatCompletionFragment:
       type: object
@@ -922,9 +884,6 @@ components:
           properties:
             content:
               type: string
-      examples:
-        - data:
-          content: "Rev"
 
     TimestampedMessage:
       title: "Timestamped Message Response"
@@ -935,11 +894,6 @@ components:
           properties:
             timestamp:
               type: integer
-              examples: [1719363309]
-      examples:
-        - role: "assistant"
-          content: "Hello there! How may I be of assistance?"
-          timestamp: 1719941299
 
     SuccessfulRequest:
       title: "Successful Request"
@@ -949,8 +903,6 @@ components:
         success:
           type: boolean
           default: true
-      examples:
-        - success: true
 
     FailedRequest:
       title: "Failed Request"
@@ -960,8 +912,6 @@ components:
         success:
           type: boolean
           default: false
-      examples:
-       - success: false
 
 tags:
   - name: "Characters"
