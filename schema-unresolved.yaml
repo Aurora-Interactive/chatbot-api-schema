@@ -530,20 +530,26 @@ paths:
                 - $ref: "#/components/schemas/CharacterOverview"
                 - $ref: "#/components/schemas/CharacterImageData"
                 - type: object
-                  required: ["aiPrompt", "initialResponse", "startsWith", "endsWith", "prompt"]
+                  required: ["aiPrompt", "initialResponse", "specialMessages"]
                   properties:
                     aiPrompt:
                       type: string
                     initialResponse:
                       type: string
-                    startsWith:
-                      type: string
-                    endsWith:
+                    specialMessages:
                       type: array
                       items:
-                        type: string
-                    prompt:
-                      type: string
+                        type: object
+                        required: ["startsWith", "endsWith", "prompt"]
+                        properties:
+                          startsWith:
+                            type: string
+                          endsWith:
+                            type: array
+                            items:
+                              type: string
+                          prompt:
+                            type: string
 
       responses:
         "200":
