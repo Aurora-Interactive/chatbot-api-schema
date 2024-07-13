@@ -527,9 +527,23 @@ paths:
           application/json:
             schema:
               allOf:
-                - $ref: "#/components/schemas/CharacterAiInitializationData"
                 - $ref: "#/components/schemas/CharacterOverview"
                 - $ref: "#/components/schemas/CharacterImageData"
+                - type: object
+                  required: ["aiPrompt", "initialResponse", "startsWith", "endsWith", "prompt"]
+                  properties:
+                    aiPrompt:
+                      type: string
+                    initialResponse:
+                      type: string
+                    startsWith:
+                      type: string
+                    endsWith:
+                      type: array
+                      items:
+                        type: string
+                    prompt:
+                      type: string
 
       responses:
         "200":
@@ -869,24 +883,7 @@ components:
         bannerImage:
           type: string
           description: "base64-encoded AVIF image data"
-          examples: ["AAABAAEAAAAAAAEACAA"]
-      examples:
-        - iconImage: "AAABAAEAAAAAAAEACAA"
-          bannerImage: "AAABAAEAAAAAAAEACAA"
 
-    CharacterAiInitializationData:
-      title: "CharacterAiInitializationData"
-      type: object
-      required: ["aiPrompt", "initialResponse"]
-      properties:
-        aiPrompt:
-          type: string
-        initialResponse:
-          type: string
-      examples:
-        - aiPrompt: "you are a helpful assistant and companion"
-          initialResponse: "Hello, there! How may I be of assistance?"
-          
     DuplicateCharacterError:
       title: "Duplicate Character Error Response"
       allOf:
