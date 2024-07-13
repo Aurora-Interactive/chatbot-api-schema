@@ -35,6 +35,7 @@ paths:
     post:
       summary: "Login"
       description: "Login and retrieve a reusable access token for use with the rest of the API"
+      x-speakeasy-usage-example: true
       operationId: "login"
       tags: ["Users"]
       requestBody:
@@ -120,6 +121,7 @@ paths:
     get:
       summary: "Character metadata"
       description: "Return metadata for available characters in the system. Paginated. Up to 100 characters per request"
+      x-speakeasy-usage-example: true
       operationId: "getCharacters"
       x-speakeasy-group: "characters"
       x-speakeasy-name-override: "list"
@@ -223,6 +225,7 @@ paths:
     get:
       summary: "Get all chats assigned to user"
       description: "Get the chat IDs assigned to a given user ID. useful for getting chat context and message history"
+      x-speakeasy-usage-example: true
       operationId: "getChatsForUser"
       x-speakeasy-group: "chats"
       x-speakeasy-name-override: "listForUser"
@@ -267,6 +270,7 @@ paths:
     post:
       summary: "Initialize chat with AI character"
       description: "Initialize a chat with a given AI character, including storing the character's initial response as a message in our system."
+      x-speakeasy-usage-example: true
       operationId: "initializeChat"
       x-speakeasy-group: "chats"
       x-speakeasy-name-override: "initialize"
@@ -314,6 +318,7 @@ paths:
     delete:
       summary: "Delete a chat"
       description: "Delete a chat, given a chat ID. All message history that is still stored is also deleted"
+      x-speakeasy-usage-example: true
       operationId: "deleteChat"
       x-speakeasy-group: "chats"
       x-speakeasy-name-override: "delete"
@@ -355,6 +360,7 @@ paths:
     post:
       summary: "Save chat message"
       description: "Save chat message either from the initial context prompt or after AI generation"
+      x-speakeasy-usage-example: true
       operationId: "saveMessage"
       x-speakeasy-group: "messages"
       x-speakeasy-name-override: "save"
@@ -459,6 +465,7 @@ paths:
     get:
       summary: "Get chat context"
       description: "Get all the messages from a given chat that are allocated to be used as AI model context. Almost always less messages than full chat history for performance reasons when running against our AI model."
+      x-speakeasy-usage-example: true
       operationId: "getMessageContext"
       x-speakeasy-group: "messages"
       x-speakeasy-name-override: "context"
@@ -515,6 +522,7 @@ paths:
     post:
       summary: "Create character"
       description: "Upload character data to our system"
+      x-speakeasy-usage-example: true
       operationId: "createCharacter"
       x-speakeasy-group: "characters"
       x-speakeasy-name-override: "create"
@@ -590,6 +598,7 @@ paths:
     post:
       summary: "Send message"
       description: "Send a message to a particular chat for a response"
+      x-speakeasy-usage-example: true
       operationId: "sendMessage"
       x-speakeasy-group: "messages"
       x-speakeasy-name-override: "send"
