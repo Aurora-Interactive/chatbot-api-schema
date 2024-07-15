@@ -817,14 +817,14 @@ components:
     UnauthorizedIdResponse:
       x-speakeasy-name-override: "UnauthorizedIdError"
       allOf:
-      - $ref: "#/components/schemas/FailedRequest"
-      - type: object
-        description: "Given resource ID does not belong to the given user"
-        required: ["error"]
-        properties:
-          error:
-            type: string
-            enum: ["Chat or message does not belong to this user"]
+        - $ref: "#/components/schemas/FailedRequest"
+        - type: object
+          description: "Given resource ID does not belong to the given user"
+          required: ["error"]
+          properties:
+            error:
+              type: string
+              enum: ["Chat or message does not belong to this user"]
 
     DuplicateSignupError:
       type: object
