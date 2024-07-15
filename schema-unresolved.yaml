@@ -1,6 +1,6 @@
 openapi: 3.1.0
 info:
-  version: 4.0.0
+  version: 5.0.0
   title: "Aurora AI Chat REST API"
   description: "REST API used in storing and executing AI chat completions in a personalized and conversational manner. It comes with support for streaming chat responses."
   contact:
@@ -31,7 +31,7 @@ paths:
     statusCodes:
       - 5XX
 
-  /api/v4/login:
+  /api/v5/login:
     post:
       summary: "Login"
       description: "Login and retrieve a reusable access token for use with the rest of the API"
@@ -72,7 +72,7 @@ paths:
               schema:
                 $ref: "#/components/schemas/AuthenticationFailedResponse"
 
-  /api/v4/signup:
+  /api/v5/signup:
     post:
       summary: "User signup"
       description: "Create a user account"
@@ -117,7 +117,7 @@ paths:
                   - $ref: "#/components/schemas/FailedRequest"
                   - $ref: "#/components/schemas/DuplicateSignupError"
 
-  /api/v4/characters:
+  /api/v5/characters:
     get:
       summary: "Character metadata"
       description: "Return metadata for available characters in the system. Paginated. Up to 100 characters per request"
@@ -159,6 +159,7 @@ paths:
                         items:
                           allOf:
                             - $ref: "#/components/schemas/CharacterOverview"
+                            - $ref: "#/components/schemas/CharacterIconData"
                             - type: object
                               required: ["isOfficial", "id"]
                               properties:
@@ -184,13 +185,13 @@ paths:
               schema:
                 $ref: "#/components/schemas/AuthenticationFailedResponse"
 
-  /api/v4/characters/imageData:
+  /api/v5/characters/banner:
     get:
       summary: "Character image visuals"
       description: "Get the banner and profile icon that is assigned to a given character"
-      operationId: "getCharacterImageData"
+      operationId: "getCharacterBanner"
       x-speakeasy-group: "characters"
-      x-speakeasy-name-override: "getImageData"
+      x-speakeasy-name-override: "bannerImage"
       tags:
         - Characters
       parameters:
@@ -204,7 +205,7 @@ paths:
             application/json:
               schema:
                 allOf:
-                  - $ref: "#/components/schemas/CharacterImageData"
+                  - $ref: "#/components/schemas/CharacterBannerData"
                   - $ref: "#/components/schemas/SuccessfulRequest"
 
         "400":
@@ -221,7 +222,7 @@ paths:
               schema:
                 $ref: "#/components/schemas/AuthenticationFailedResponse"
 
-  /api/v4/chats:
+  /api/v5/chats:
     get:
       summary: "Get all chats assigned to user"
       description: "Get the chat IDs assigned to a given user ID. useful for getting chat context and message history"
@@ -233,7 +234,7 @@ paths:
         - Chats
       parameters:
         - $ref: "#/components/parameters/AccessToken"
-      
+
       responses:
         "200":
           description: "JSON array of chat info"
@@ -266,7 +267,48 @@ paths:
               schema:
                 $ref: "#/components/schemas/AuthenticationFailedResponse"
 
-  /api/v4/chat:
+  /api/v5/chat/preview:
+    get:
+      summary: "Get the latest message from the given chat"
+      description: "Useful when previwing the chat in the chat list sidebar"
+      operationId: "getChatPreview"
+      x-speakeasy-group: "chats"
+      x-speakeasy-name-override: "preview"
+      tags:
+        - Chats
+      parameters:
+        - $ref: "#/components/parameters/AccessToken"
+        - $ref: "#/components/parameters/ChatId"
+      responses:
+        "200":
+          description: "Latest message in the given chat, useful as a preview"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Message"
+
+        "400":
+          description: "Bad request"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/InvalidRequestResponse"
+
+        "401":
+          description: "Unauthorized"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AuthenticationFailedResponse"
+
+        "402":
+          description: "User is not paying for a subscription"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AccountInBadStandingResponse"
+
+  /api/v5/chat:
     post:
       summary: "Initialize chat with AI character"
       description: "Initialize a chat with a given AI character, including storing the character's initial response as a message in our system."
@@ -356,7 +398,7 @@ paths:
                   - $ref: "#/components/schemas/AuthenticationFailedResponse"
                   - $ref: "#/components/schemas/UnauthorizedIdResponse"
 
-  /api/v4/message/save:
+  /api/v5/message/save:
     post:
       summary: "Save chat message"
       description: "Save chat message either from the initial context prompt or after AI generation"
@@ -405,7 +447,7 @@ paths:
               schema:
                 $ref: "#/components/schemas/AccountInBadStandingResponse"
 
-  /api/v4/message/history:
+  /api/v5/message/history:
     get:
       summary: "Get full message history"
       description: "Get all of the messages sent in a given chat"
@@ -461,7 +503,7 @@ paths:
               schema:
                 $ref: "#/components/schemas/AccountInBadStandingResponse"
 
-  /api/v4/message/context:
+  /api/v5/message/context:
     get:
       summary: "Get chat context"
       description: "Get all the messages from a given chat that are allocated to be used as AI model context. Almost always less messages than full chat history for performance reasons when running against our AI model."
@@ -518,7 +560,32 @@ paths:
               schema:
                 $ref: "#/components/schemas/AccountInBadStandingResponse"
 
-  /api/v4/character:
+  /api/v5/character:
+    get:
+      summary: "Get information about a specific character"
+      operationId: "getCharacter"
+      x-speakeasy-group: "characters"
+      x-speakeasy-name-override: "character"
+      tags:
+        - Characters
+      parameters:
+        - $ref: "#/components/parameters/AccessToken"
+        - $ref: "#/components/parameters/CharacterId"
+      
+      responses:
+        "200":
+          description: "Character data"
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: "#/components/schemas/CharacterIconData"
+                  - $ref: "#/components/schemas/CharacterOverview"
+                  - type: object
+                    required: ["isOfficial"]
+                    properties:
+                      isOfficial:
+                        type: boolean
     post:
       summary: "Create character"
       description: "Upload character data to our system"
@@ -594,7 +661,7 @@ paths:
               schema:
                 $ref: "#/components/schemas/AccountInBadStandingResponse"
 
-  /api/v4/message:
+  /api/v5/message:
     post:
       summary: "Send message"
       description: "Send a message to a particular chat for a response"
@@ -858,12 +925,22 @@ components:
           type: integer
 
     CharacterImageData:
+      allOf:
+        - $ref: "#/components/schemas/CharacterIconData"
+        - $ref: "#/components/schemas/CharacterBannerData"
+
+    CharacterIconData:
       type: object
-      required: ["iconImage", "bannerImage"]
+      required: ["iconImage"]
       properties:
         iconImage:
           type: string
           description: "base64-encoded AVIF image data"
+
+    CharacterBannerData:
+      type: object
+      required: ["bannerImage"]
+      properties:
         bannerImage:
           type: string
           description: "base64-encoded AVIF image data"
