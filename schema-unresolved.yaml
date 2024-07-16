@@ -1,6 +1,6 @@
 openapi: 3.1.0
 info:
-  version: 5.0.0
+  version: 5.1.0
   title: "Aurora AI Chat REST API"
   description: "REST API used in storing and executing AI chat completions in a personalized and conversational manner. It comes with support for streaming chat responses."
   contact:
@@ -285,7 +285,13 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Message"
+                type: object
+                required: ["content", "timestamp"]
+                properties:
+                  content:
+                    type: string
+                  timestamp:
+                    type: integer
 
         "400":
           description: "Bad request"
