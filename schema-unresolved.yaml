@@ -96,15 +96,6 @@ paths:
         "400":
           $ref: "#/components/responses/DefaultBadRequest"
 
-        "401":
-          description: "Username or email already in use"
-          content:
-            application/json:
-              schema:
-                allOf:
-                  - $ref: "#/components/schemas/FailedRequest"
-                  - $ref: "#/components/schemas/DuplicateSignupError"
-
   /api/v6/characters:
     get:
       summary: "Character metadata"
@@ -324,24 +315,10 @@ paths:
                 $ref: "#/components/schemas/SuccessfulRequest"
 
         "400":
-          description: "Bad request"
-          content:
-            application/json:
-              schema:
-                oneOf:
-                  - $ref: "#/components/schemas/InvalidRequestResponse"
-                  - allOf:
-                    - $ref: "#/components/schemas/FailedRequest"
-                    - $ref: "#/components/schemas/InvalidChatId"
+          $ref: "#/components/responses/DefaultBadRequest"
 
         "401":
-          description: "Unauthorized"
-          content:
-            application/json:
-              schema:
-                oneOf:
-                  - $ref: "#/components/schemas/AuthenticationFailedResponse"
-                  - $ref: "#/components/schemas/UnauthorizedIdResponse"
+          $ref: "#/components/responses/DefaultUnauthorizedResponse"
 
   /api/v6/message/save:
     post:
@@ -410,24 +387,10 @@ paths:
                           $ref: "#/components/schemas/TimestampedMessage"
 
         "400":
-          description: "Bad request"
-          content:
-            application/json:
-              schema:
-                oneOf:
-                  - $ref: "#/components/schemas/InvalidRequestResponse"
-                  - allOf:
-                    - $ref: "#/components/schemas/FailedRequest"
-                    - $ref: "#/components/schemas/InvalidChatId"
+          $ref: "#/components/responses/DefaultBadRequest"
 
         "401":
-          description: "Unauthorized"
-          content:
-            application/json:
-              schema:
-                oneOf:
-                  - $ref: "#/components/schemas/AuthenticationFailedResponse"
-                  - $ref: "#/components/schemas/UnauthorizedIdResponse"
+          $ref: "#/components/responses/DefaultUnauthorizedResponse"
 
         "402":
           $ref: "#/components/responses/DefaultBadStandingResponse"
@@ -509,15 +472,7 @@ paths:
                   - $ref: "#/components/schemas/CharacterId"
 
         "400":
-          description: "Bad request"
-          content:
-            application/json:
-              schema:
-                oneOf:
-                  - $ref: "#/components/schemas/InvalidRequestResponse"
-                  - allOf:
-                    - $ref: "#/components/schemas/SuccessfulRequest"
-                    - $ref: "#/components/schemas/DuplicateCharacterError"
+          $ref: "#/components/responses/DefaultBadRequest"
 
         "401":
           $ref: "#/components/responses/DefaultUnauthorizedResponse"
@@ -559,24 +514,10 @@ paths:
                 $ref: "#/components/schemas/ChatCompletionFragment"
 
         "400":
-          description: "Bad request"
-          content:
-            application/json:
-              schema:
-                oneOf:
-                  - $ref: "#/components/schemas/InvalidRequestResponse"
-                  - allOf:
-                    - $ref: "#/components/schemas/FailedRequest"
-                    - $ref: "#/components/schemas/InvalidChatId"
+          $ref: "#/components/responses/DefaultBadRequest"
 
         "401":
-          description: "Unauthorized"
-          content:
-            application/json:
-              schema:
-                oneOf:
-                  - $ref: "#/components/schemas/AuthenticationFailedResponse"
-                  - $ref: "#/components/schemas/UnauthorizedIdResponse"
+          $ref: "#/components/responses/DefaultUnauthorizedResponse"
 
         "402":
           $ref: "#/components/responses/DefaultBadStandingResponse"
@@ -602,24 +543,10 @@ paths:
                 $ref: "#/components/schemas/SuccessfulRequest"
 
         "400":
-          description: "Bad request"
-          content:
-            application/json:
-              schema:
-                oneOf:
-                  - $ref: "#/components/schemas/InvalidRequestResponse"
-                  - allOf:
-                    - $ref: "#/components/schemas/FailedRequest"
-                    - $ref: "#/components/schemas/InvalidMessageId"
+          $ref: "#/components/responses/DefaultBadRequest"
 
         "401":
-          description: "Unauthorized"
-          content:
-            application/json:
-              schema:
-                oneOf:
-                  - $ref: "#/components/schemas/AuthenticationFailedResponse"
-                  - $ref: "#/components/schemas/UnauthorizedIdResponse"
+          $ref: "#/components/responses/DefaultUnauthorizedResponse"
 
         "402":
           $ref: "#/components/responses/DefaultBadStandingResponse"
@@ -631,20 +558,14 @@ components:
       content:
         application/json:
           schema:
-            oneOf:
-              - $ref: "#/components/schemas/InvalidRequestResponse"
-              - allOf:
-                - $ref: "#/components/schemas/FailedRequest"
-                - $ref: "#/components/schemas/InvalidMessageId"
+            $ref: "#/components/schemas/InvalidRequestResponse"
 
     DefaultUnauthorizedResponse:
       description: "Unauthorized"
       content:
         application/json:
           schema:
-            oneOf:
-              - $ref: "#/components/schemas/AuthenticationFailedResponse"
-              - $ref: "#/components/schemas/UnauthorizedIdResponse"
+            $ref: "#/components/schemas/AuthenticationFailedResponse"
 
     DefaultBadStandingResponse:
       description: "User is not paying for a subscription"
