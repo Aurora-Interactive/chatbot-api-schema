@@ -161,8 +161,7 @@ paths:
 
   /api/v6/characters/banner:
     get:
-      summary: "Character image visuals"
-      description: "Get the banner icon associated with a character"
+      summary: "Character banner image"
       operationId: "characters.banner"
       x-speakeasy-group: "characters"
       x-speakeasy-name-override: "banner"
@@ -174,7 +173,7 @@ paths:
 
       responses:
         "200":
-          description: "Banner and icon images assigned to the character"
+          description: "Banner image assigned to the character"
           content:
             application/json:
               schema:
@@ -382,9 +381,9 @@ paths:
                 allOf:
                   - $ref: "#/components/schemas/SuccessfulRequest"
                   - type: object
-                    required: ["chatHistory"]
+                    required: ["messages"]
                     properties:
-                      chatHistory:
+                      messages:
                         type: array
                         items:
                           $ref: "#/components/schemas/TimestampedMessage"
