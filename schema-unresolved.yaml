@@ -59,18 +59,10 @@ paths:
                 $ref: "#/components/schemas/AccessTokenResponse"
 
         "400":
-          description: "Bad request"
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/InvalidRequestResponse"
+          $ref: "#/components/responses/DefaultBadRequest"
 
         "401":
-          description: "Invalid username or password"
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/AuthenticationFailedResponse"
+          $ref: "#/components/responses/DefaultUnauthorizedResponse"
 
   /api/v6/signup:
     post:
@@ -102,11 +94,7 @@ paths:
                 $ref: "#/components/schemas/AccessTokenResponse"
 
         "400":
-          description: "Bad request"
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/InvalidRequestResponse"
+          $ref: "#/components/responses/DefaultBadRequest"
 
         "401":
           description: "Username or email already in use"
@@ -172,18 +160,10 @@ paths:
                         summary: "Whether there aren't any more characters left to query"
 
         "400":
-          description: "Bad request"
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/InvalidRequestResponse"
+          $ref: "#/components/responses/DefaultBadRequest"
 
         "401":
-          description: "Unauthorized"
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/AuthenticationFailedResponse"
+          $ref: "#/components/responses/DefaultUnauthorizedResponse"
 
   /api/v6/characters/banner:
     get:
@@ -209,18 +189,10 @@ paths:
                   - $ref: "#/components/schemas/SuccessfulRequest"
 
         "400":
-          description: "Bad request"
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/InvalidRequestResponse"
+          $ref: "#/components/responses/DefaultBadRequest"
 
         "401":
-          description: "Unauthorized"
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/AuthenticationFailedResponse"
+          $ref: "#/components/responses/DefaultUnauthorizedResponse"
 
   /api/v6/chats:
     get:
@@ -254,18 +226,10 @@ paths:
                         - $ref: "#/components/schemas/ChatId"
 
         "400":
-          description: "Bad request"
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/InvalidRequestResponse"
+          $ref: "#/components/responses/DefaultBadRequest"
 
         "401":
-          description: "Invalid access token"
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/AuthenticationFailedResponse"
+          $ref: "#/components/responses/DefaultUnauthorizedResponse"
 
   /api/v6/chat/preview:
     get:
@@ -293,25 +257,13 @@ paths:
                     type: integer
 
         "400":
-          description: "Bad request"
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/InvalidRequestResponse"
+          $ref: "#/components/responses/DefaultBadRequest"
 
         "401":
-          description: "Unauthorized"
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/AuthenticationFailedResponse"
+          $ref: "#/components/responses/DefaultUnauthorizedResponse"
 
         "402":
-          description: "User is not paying for a subscription"
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/AccountInBadStandingResponse"
+          $ref: "#/components/responses/DefaultBadStandingResponse"
 
   /api/v6/chat:
     post:
@@ -342,25 +294,13 @@ paths:
                   - $ref: "#/components/schemas/ChatId"
 
         "400":
-          description: "Bad request"
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/InvalidRequestResponse"
+          $ref: "#/components/responses/DefaultBadRequest"
 
         "401":
-          description: "Unauthorized"
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/AuthenticationFailedResponse"
+          $ref: "#/components/responses/DefaultUnauthorizedResponse"
 
         "402":
-          description: "User is not paying for a subscription"
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/AccountInBadStandingResponse"
+          $ref: "#/components/responses/DefaultBadStandingResponse"
 
     delete:
       summary: "Delete a chat"
@@ -432,25 +372,13 @@ paths:
                 $ref: "#/components/schemas/SuccessfulRequest"
 
         "400":
-          description: "Bad request"
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/InvalidRequestResponse"
+          $ref: "#/components/responses/DefaultBadRequest"
 
         "401":
-          description: "Unauthorized"
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/AuthenticationFailedResponse"
+          $ref: "#/components/responses/DefaultUnauthorizedResponse"
 
         "402":
-          description: "User is not paying for a subscription"
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/AccountInBadStandingResponse"
+          $ref: "#/components/responses/DefaultBadStandingResponse"
 
   /api/v6/message/history:
     get:
@@ -502,11 +430,7 @@ paths:
                   - $ref: "#/components/schemas/UnauthorizedIdResponse"
 
         "402":
-          description: "User is not paying for a subscription"
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/AccountInBadStandingResponse"
+          $ref: "#/components/responses/DefaultBadStandingResponse"
 
   /api/v6/character:
     get:
@@ -596,18 +520,10 @@ paths:
                     - $ref: "#/components/schemas/DuplicateCharacterError"
 
         "401":
-          description: "Unauthorized"
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/AuthenticationFailedResponse"
+          $ref: "#/components/responses/DefaultUnauthorizedResponse"
 
         "402":
-          description: "User is not paying for a subscription"
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/AccountInBadStandingResponse"
+          $ref: "#/components/responses/DefaultBadStandingResponse"
 
   /api/v6/message:
     post:
@@ -663,11 +579,7 @@ paths:
                   - $ref: "#/components/schemas/UnauthorizedIdResponse"
 
         "402":
-          description: "User is not paying for a subscription"
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/AccountInBadStandingResponse"
+          $ref: "#/components/responses/DefaultBadStandingResponse"
 
     delete:
       summary: "Delete message"
@@ -710,13 +622,37 @@ paths:
                   - $ref: "#/components/schemas/UnauthorizedIdResponse"
 
         "402":
-          description: "User is not paying for a subscription"
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/AccountInBadStandingResponse"
+          $ref: "#/components/responses/DefaultBadStandingResponse"
 
 components:
+  responses:
+    DefaultBadRequest:
+      description: "Bad request"
+      content:
+        application/json:
+          schema:
+            oneOf:
+              - $ref: "#/components/schemas/InvalidRequestResponse"
+              - allOf:
+                - $ref: "#/components/schemas/FailedRequest"
+                - $ref: "#/components/schemas/InvalidMessageId"
+
+    DefaultUnauthorizedResponse:
+      description: "Unauthorized"
+      content:
+        application/json:
+          schema:
+            oneOf:
+              - $ref: "#/components/schemas/AuthenticationFailedResponse"
+              - $ref: "#/components/schemas/UnauthorizedIdResponse"
+
+    DefaultBadStandingResponse:
+      description: "User is not paying for a subscription"
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/AccountInBadStandingResponse"
+
   parameters:
     MessageId:
       name: "messageId"
