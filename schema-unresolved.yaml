@@ -1,6 +1,6 @@
 openapi: 3.1.0
 info:
-  version: 5.1.0
+  version: 6.0.0
   title: "Aurora AI Chat REST API"
   description: "REST API used in storing and executing AI chat completions in a personalized and conversational manner. It comes with support for streaming chat responses."
   contact:
@@ -31,7 +31,7 @@ paths:
     statusCodes:
       - 5XX
 
-  /api/v5/login:
+  /api/v6/login:
     post:
       summary: "Login"
       description: "Login and retrieve a reusable access token for use with the rest of the API"
@@ -72,7 +72,7 @@ paths:
               schema:
                 $ref: "#/components/schemas/AuthenticationFailedResponse"
 
-  /api/v5/signup:
+  /api/v6/signup:
     post:
       summary: "User signup"
       description: "Create a user account"
@@ -117,7 +117,7 @@ paths:
                   - $ref: "#/components/schemas/FailedRequest"
                   - $ref: "#/components/schemas/DuplicateSignupError"
 
-  /api/v5/characters:
+  /api/v6/characters:
     get:
       summary: "Character metadata"
       description: "Return metadata for available characters in the system. Paginated. Up to 100 characters per request"
@@ -185,7 +185,7 @@ paths:
               schema:
                 $ref: "#/components/schemas/AuthenticationFailedResponse"
 
-  /api/v5/characters/banner:
+  /api/v6/characters/banner:
     get:
       summary: "Character image visuals"
       description: "Get the banner and profile icon that is assigned to a given character"
@@ -222,7 +222,7 @@ paths:
               schema:
                 $ref: "#/components/schemas/AuthenticationFailedResponse"
 
-  /api/v5/chats:
+  /api/v6/chats:
     get:
       summary: "Get all chats assigned to user"
       description: "Get the chat IDs assigned to a given user ID. useful for getting chat context and message history"
@@ -267,7 +267,7 @@ paths:
               schema:
                 $ref: "#/components/schemas/AuthenticationFailedResponse"
 
-  /api/v5/chat/preview:
+  /api/v6/chat/preview:
     get:
       summary: "Get the latest message from the given chat"
       description: "Useful when previwing the chat in the chat list sidebar"
@@ -314,7 +314,7 @@ paths:
               schema:
                 $ref: "#/components/schemas/AccountInBadStandingResponse"
 
-  /api/v5/chat:
+  /api/v6/chat:
     post:
       summary: "Initialize chat with AI character"
       description: "Initialize a chat with a given AI character, including storing the character's initial response as a message in our system."
@@ -404,10 +404,10 @@ paths:
                   - $ref: "#/components/schemas/AuthenticationFailedResponse"
                   - $ref: "#/components/schemas/UnauthorizedIdResponse"
 
-  /api/v5/message/save:
+  /api/v6/message/save:
     post:
       summary: "Save chat message"
-      description: "Save chat message either from the initial context prompt or after AI generation"
+      description: "Save chat message after AI generation"
       x-speakeasy-usage-example: true
       operationId: "saveMessage"
       x-speakeasy-group: "messages"
@@ -453,7 +453,7 @@ paths:
               schema:
                 $ref: "#/components/schemas/AccountInBadStandingResponse"
 
-  /api/v5/message/history:
+  /api/v6/message/history:
     get:
       summary: "Get full message history"
       description: "Get all of the messages sent in a given chat"
@@ -509,64 +509,7 @@ paths:
               schema:
                 $ref: "#/components/schemas/AccountInBadStandingResponse"
 
-  /api/v5/message/context:
-    get:
-      summary: "Get chat context"
-      description: "Get all the messages from a given chat that are allocated to be used as AI model context. Almost always less messages than full chat history for performance reasons when running against our AI model."
-      x-speakeasy-usage-example: true
-      operationId: "getMessageContext"
-      x-speakeasy-group: "messages"
-      x-speakeasy-name-override: "context"
-      tags:
-        - Messages
-      parameters:
-        - $ref: "#/components/parameters/AccessToken"
-        - $ref: "#/components/parameters/ChatId"
-
-      responses:
-        "200":
-          description: "JSON array of chat messages"
-          content:
-            application/json:
-              schema:
-                allOf:
-                  - $ref: "#/components/schemas/SuccessfulRequest"
-                  - type: object
-                    required: ["chatContext"]
-                    properties:
-                      chatContext:
-                        type: array
-                        items:
-                          $ref: "#/components/schemas/Message"
-
-        "400":
-          description: "Bad request"
-          content:
-            application/json:
-              schema:
-                oneOf:
-                  - $ref: "#/components/schemas/InvalidRequestResponse"
-                  - allOf:
-                    - $ref: "#/components/schemas/FailedRequest"
-                    - $ref: "#/components/schemas/InvalidChatId"
-
-        "401":
-          description: "Unauthorized"
-          content:
-            application/json:
-              schema:
-                oneOf:
-                  - $ref: "#/components/schemas/AuthenticationFailedResponse"
-                  - $ref: "#/components/schemas/UnauthorizedIdResponse"
-
-        "402":
-          description: "User is not paying for a subscription"
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/AccountInBadStandingResponse"
-
-  /api/v5/character:
+  /api/v6/character:
     get:
       summary: "Get information about a specific character"
       operationId: "getCharacter"
@@ -667,7 +610,7 @@ paths:
               schema:
                 $ref: "#/components/schemas/AccountInBadStandingResponse"
 
-  /api/v5/message:
+  /api/v6/message:
     post:
       summary: "Send message"
       description: "Send a message to a particular chat for a response"
@@ -687,16 +630,10 @@ paths:
                 - $ref: "#/components/schemas/CharacterId"
                 - $ref: "#/components/schemas/ChatId"
                 - type: object
-                  required: ["message", "context"]
+                  required: ["message"]
                   properties:
                     message:
                       type: string
-                    context:
-                      description: "Messages to be used as AI context during response generation"
-                      x-speakeasy-name-override: "messageContext"
-                      type: array
-                      items:
-                        $ref: "#/components/schemas/Message"
 
       responses:
         "200":
