@@ -36,7 +36,9 @@ paths:
       summary: "Login"
       description: "Login and retrieve an access token for use with the API"
       x-speakeasy-usage-example: true
-      operationId: "login"
+      operationId: "users.login"
+      x-speakeasy-group: "users"
+      x-speakeasy-name-override: "login"
       tags: ["Users"]
       requestBody:
         content:
@@ -68,8 +70,9 @@ paths:
     post:
       summary: "User signup"
       description: "Create an account"
-      operationId: "signup"
-      x-speakeasy-name-override: "createAccount"
+      operationId: "users.signup"
+      x-speakeasy-group: "users"
+      x-speakeasy-name-override: "signup"
       tags: ["Users"]
       requestBody:
         content:
