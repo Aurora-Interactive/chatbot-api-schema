@@ -34,7 +34,7 @@ paths:
   /api/v6/login:
     post:
       summary: "Login"
-      description: "Login and retrieve a reusable access token for use with the rest of the API"
+      description: "Login and retrieve an access token for use with the API"
       x-speakeasy-usage-example: true
       operationId: "login"
       tags: ["Users"]
@@ -75,7 +75,7 @@ paths:
   /api/v6/signup:
     post:
       summary: "User signup"
-      description: "Create a user account"
+      description: "Create an account"
       operationId: "signup"
       x-speakeasy-name-override: "createAccount"
       tags: ["Users"]
@@ -120,7 +120,7 @@ paths:
   /api/v6/characters:
     get:
       summary: "Character metadata"
-      description: "Return metadata for available characters in the system. Paginated. Up to 100 characters per request"
+      description: "Get data for available characters in the system. Paginated. Up to 100 characters per request"
       x-speakeasy-usage-example: true
       operationId: "getCharacters"
       x-speakeasy-group: "characters"
@@ -188,7 +188,7 @@ paths:
   /api/v6/characters/banner:
     get:
       summary: "Character image visuals"
-      description: "Get the banner and profile icon that is assigned to a given character"
+      description: "Get the banner icon associated with a character"
       operationId: "getCharacterBanner"
       x-speakeasy-group: "characters"
       x-speakeasy-name-override: "bannerImage"
@@ -224,8 +224,8 @@ paths:
 
   /api/v6/chats:
     get:
-      summary: "Get all chats assigned to user"
-      description: "Get the chat IDs assigned to a given user ID. useful for getting chat context and message history"
+      summary: "Get all chats assigned to a user"
+      description: "Get chat IDs assigned to a user ID"
       x-speakeasy-usage-example: true
       operationId: "getChatsForUser"
       x-speakeasy-group: "chats"
@@ -270,7 +270,6 @@ paths:
   /api/v6/chat/preview:
     get:
       summary: "Get the latest message from the given chat"
-      description: "Useful when previwing the chat in the chat list sidebar"
       operationId: "getChatPreview"
       x-speakeasy-group: "chats"
       x-speakeasy-name-override: "preview"
@@ -365,7 +364,7 @@ paths:
 
     delete:
       summary: "Delete a chat"
-      description: "Delete a chat, given a chat ID. All message history that is still stored is also deleted"
+      description: "Delete a chat by ID. All messages in the chat are also deleted."
       x-speakeasy-usage-example: true
       operationId: "deleteChat"
       x-speakeasy-group: "chats"
@@ -407,7 +406,7 @@ paths:
   /api/v6/message/save:
     post:
       summary: "Save chat message"
-      description: "Save chat message after AI generation"
+      description: "Save chat message after AI response"
       x-speakeasy-usage-example: true
       operationId: "saveMessage"
       x-speakeasy-group: "messages"
@@ -456,7 +455,7 @@ paths:
   /api/v6/message/history:
     get:
       summary: "Get full message history"
-      description: "Get all of the messages sent in a given chat"
+      description: "Get user-facing chat transcript. Does not include special messages (enhanced context) or system messages."
       operationId: "getMessageHistory"
       x-speakeasy-group: "messages"
       x-speakeasy-name-override: "history"
@@ -511,7 +510,7 @@ paths:
 
   /api/v6/character:
     get:
-      summary: "Get information about a specific character"
+      summary: "Get information about a character"
       operationId: "getCharacter"
       x-speakeasy-group: "characters"
       x-speakeasy-name-override: "character"
@@ -672,7 +671,7 @@ paths:
 
     delete:
       summary: "Delete message"
-      description: "Remove message from message history, given a message ID"
+      description: "Remove message from message history by ID"
       operationId: "deleteMessage"
       x-speakeasy-group: "messages"
       x-speakeasy-name-override: "delete"
