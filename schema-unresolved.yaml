@@ -421,6 +421,13 @@ paths:
                     properties:
                       isOfficial:
                         type: boolean
+
+        "400":
+          $ref: "#/components/responses/DefaultBadRequest"
+
+        "401":
+          $ref: "#/components/responses/DefaultUnauthorizedResponse"
+
     post:
       summary: "Create character"
       description: "Upload character data to our system"
