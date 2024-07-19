@@ -1,6 +1,6 @@
 openapi: 3.1.0
 info:
-  version: 6.0.0
+  version: 6.0.1
   title: "Aurora AI Chat REST API"
   description: "REST API used in storing and executing AI chat completions in a personalized and conversational manner. It comes with support for streaming chat responses."
   contact:
@@ -8,7 +8,7 @@ info:
     email: "bdpaboi123@gmail.com"
 
 servers:
-  - url: "https://api.chatbot.aurora-interactive.online:8443"
+  - url: "https://chat-api.aurora-interactive.online:8443"
     description: "Main API Server"
 
 x-speakeasy-retries:
