@@ -1,6 +1,6 @@
 openapi: 3.1.0
 info:
-  version: 6.2.0
+  version: 6.3.0
   title: "Aurora AI Chat REST API"
   description: "REST API used in storing and executing AI chat completions in a personalized and conversational manner. It comes with support for streaming chat responses."
   contact:
@@ -10,6 +10,9 @@ info:
 servers:
   - url: "https://chat-api.aurora-interactive.online:8443"
     description: "Main API Server"
+
+  - url: "https://api-cdn.aurora-interactive.online"
+    description: "CDN-backed API server. Can ONLY be used for GET requests"
 
 x-speakeasy-retries:
   strategy: backoff
@@ -59,6 +62,59 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/AccessTokenResponse"
+
+        "400":
+          $ref: "#/components/responses/DefaultBadRequest"
+
+        "401":
+          $ref: "#/components/responses/DefaultUnauthorizedResponse"
+
+  /api/v6/userInfo:
+    get:
+      summary: "Get User Info"
+      description: "Get personal account metadata. Useful for pre-filling update fields for when the user wants to update account data"
+      x-speakeasy-usage-example: true
+      operationId: "users.getUserInfo"
+      x-speakeasy-group: "users"
+      x-speakeasy-name-override: "userData"
+      tags: ["Users"]
+      parameters:
+        - $ref: "#/components/parameters/AccessToken"
+      
+      responses:
+        "200":
+          description: "User info"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/UserInfo"
+
+        "401":
+          $ref: "#/components/responses/DefaultUnauthorizedResponse"
+
+    put:
+      summary: "Update account information"
+      description: "Update information such as your email and username"
+      x-speakeasy-usage-example: true
+      operationId: "users.setUserInfo"
+      x-speakeasy-group: "users"
+      x-speakeasy-name-override: "userData"
+      tags: ["Users"]
+      parameters:
+        - $ref: "#/components/parameters/AccessToken"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UserInfo"
+
+      responses:
+        "200":
+          description: "Update account information successfully"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SuccessfulRequest"
 
         "400":
           $ref: "#/components/responses/DefaultBadRequest"
@@ -168,7 +224,6 @@ paths:
       tags:
         - Characters
       parameters:
-        - $ref: "#/components/parameters/AccessToken"
         - $ref: "#/components/parameters/CharacterId"
 
       responses:
@@ -183,9 +238,6 @@ paths:
 
         "400":
           $ref: "#/components/responses/DefaultBadRequest"
-
-        "401":
-          $ref: "#/components/responses/DefaultUnauthorizedResponse"
 
   /api/v6/chats:
     get:
@@ -825,6 +877,15 @@ components:
         success:
           type: boolean
           default: false
+
+    UserInfo:
+      type: object
+      required: ["username", "email"]
+      properties:
+        username:
+          type: string
+        email:
+          type: string
 
 tags:
   - name: "Characters"
