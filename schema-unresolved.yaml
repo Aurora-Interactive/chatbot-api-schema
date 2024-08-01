@@ -69,7 +69,7 @@ paths:
         "401":
           $ref: "#/components/responses/DefaultUnauthorizedResponse"
 
-  /api/v6/userInfo:
+  /api/v6/user/info:
     get:
       summary: "Get User Info"
       description: "Get personal account metadata. Useful for pre-filling update fields for when the user wants to update account data"
