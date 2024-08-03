@@ -73,7 +73,7 @@ paths:
       x-speakeasy-usage-example: true
       operationId: "users.getUserInfo"
       x-speakeasy-group: "users"
-      x-speakeasy-name-override: "userData"
+      x-speakeasy-name-override: "getInfo"
       tags: ["Users"]
       parameters:
         - $ref: "#/components/parameters/AccessToken"
@@ -95,7 +95,7 @@ paths:
       x-speakeasy-usage-example: true
       operationId: "users.setUserInfo"
       x-speakeasy-group: "users"
-      x-speakeasy-name-override: "userData"
+      x-speakeasy-name-override: "setInfo"
       tags: ["Users"]
       parameters:
         - $ref: "#/components/parameters/AccessToken"
