@@ -486,12 +486,20 @@ paths:
               allOf:
                 - $ref: "#/components/schemas/CharacterOverview"
                 - type: object
-                  required: ["aiPrompt", "initialResponse", "specialMessages"]
+                  required: ["aiPrompt", "initialResponse", "specialMessages", "banner", "icon"]
                   properties:
                     aiPrompt:
                       type: string
                     initialResponse:
                       type: string
+                    banner:
+                      type: string
+                      description: "base64-encoded AVIF image"
+                      examples: ["AAAAbx"]
+                    icon:
+                      type: string
+                      description: "base64-encoded AVIF image"
+                      examples: ["AAAAbx"]
                     specialMessages:
                       type: array
                       items:
@@ -646,7 +654,7 @@ components:
         type: string
       examples:
         sampleAccessToken:
-          summary: "Secret string-type token that allows the user to use authenticated API endpoints"
+          summary: "Secret token that allows the user to use authenticated API endpoints"
           value: wcdE8dGPZEshG6B8E5uGpgALr5LzwPX5AqZFKAZsfcvzuHVf
       x-speakeasy-globals-hidden: true
 
