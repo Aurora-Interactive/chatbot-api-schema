@@ -11,9 +11,6 @@ servers:
   - url: "https://chat-api.aurora-interactive.online:8443"
     description: "Main API Server"
 
-  - url: "https://api-cdn.aurora-interactive.online"
-    description: "CDN-backed API server. Can ONLY be used for GET requests"
-
 x-speakeasy-retries:
   strategy: backoff
   backoff:
