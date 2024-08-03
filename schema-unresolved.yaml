@@ -1,6 +1,6 @@
 openapi: 3.1.0
 info:
-  version: 6.3.0
+  version: 7.0.0
   title: "Aurora AI Chat REST API"
   description: "REST API used in storing and executing AI chat completions in a personalized and conversational manner. It comes with support for streaming chat responses."
   contact:
@@ -10,9 +10,6 @@ info:
 servers:
   - url: "https://chat-api.aurora-interactive.online:8443"
     description: "Main API Server"
-
-  - url: "https://api-cdn.aurora-interactive.online"
-    description: "CDN-backed API server. Can ONLY be used for GET requests"
 
 x-speakeasy-retries:
   strategy: backoff
@@ -34,7 +31,7 @@ paths:
     statusCodes:
       - 5XX
 
-  /api/v6/login:
+  /api/v7/login:
     post:
       summary: "Login"
       description: "Login and retrieve an access token for use with the API"
@@ -69,7 +66,7 @@ paths:
         "401":
           $ref: "#/components/responses/DefaultUnauthorizedResponse"
 
-  /api/v6/user/info:
+  /api/v7/user/info:
     get:
       summary: "Get User Info"
       description: "Get personal account metadata. Useful for pre-filling update fields for when the user wants to update account data"
@@ -122,7 +119,7 @@ paths:
         "401":
           $ref: "#/components/responses/DefaultUnauthorizedResponse"
 
-  /api/v6/signup:
+  /api/v7/signup:
     post:
       summary: "User signup"
       description: "Create an account"
@@ -155,7 +152,7 @@ paths:
         "400":
           $ref: "#/components/responses/DefaultBadRequest"
 
-  /api/v6/characters:
+  /api/v7/characters:
     get:
       summary: "Character metadata"
       description: "Get data for available characters in the system. Paginated. Up to 100 characters per request"
@@ -197,7 +194,6 @@ paths:
                         items:
                           allOf:
                             - $ref: "#/components/schemas/CharacterOverview"
-                            - $ref: "#/components/schemas/CharacterIconData"
                             - type: object
                               required: ["isOfficial", "id"]
                               properties:
@@ -215,31 +211,7 @@ paths:
         "401":
           $ref: "#/components/responses/DefaultUnauthorizedResponse"
 
-  /api/v6/characters/banner:
-    get:
-      summary: "Character banner image"
-      operationId: "characters.banner"
-      x-speakeasy-group: "characters"
-      x-speakeasy-name-override: "banner"
-      tags:
-        - Characters
-      parameters:
-        - $ref: "#/components/parameters/CharacterId"
-
-      responses:
-        "200":
-          description: "Banner image assigned to the character"
-          content:
-            application/json:
-              schema:
-                allOf:
-                  - $ref: "#/components/schemas/CharacterBannerData"
-                  - $ref: "#/components/schemas/SuccessfulRequest"
-
-        "400":
-          $ref: "#/components/responses/DefaultBadRequest"
-
-  /api/v6/chats:
+  /api/v7/chats:
     get:
       summary: "Get all chats assigned to a user"
       description: "Get chat IDs assigned to a user ID"
@@ -276,7 +248,7 @@ paths:
         "401":
           $ref: "#/components/responses/DefaultUnauthorizedResponse"
 
-  /api/v6/chat/preview:
+  /api/v7/chat/preview:
     get:
       summary: "Get the latest message from the given chat"
       operationId: "chats.preview"
@@ -310,7 +282,7 @@ paths:
         "402":
           $ref: "#/components/responses/DefaultBadStandingResponse"
 
-  /api/v6/chat:
+  /api/v7/chat:
     post:
       summary: "Initialize chat with AI character"
       description: "Initialize a chat with a given AI character, including storing the character's initial response as a message in our system."
@@ -374,7 +346,7 @@ paths:
         "401":
           $ref: "#/components/responses/DefaultUnauthorizedResponse"
 
-  /api/v6/message/save:
+  /api/v7/message/save:
     post:
       summary: "Save chat message"
       description: "Save chat message after AI response"
@@ -417,7 +389,7 @@ paths:
         "402":
           $ref: "#/components/responses/DefaultBadStandingResponse"
 
-  /api/v6/message/history:
+  /api/v7/message/history:
     get:
       summary: "Get full message history"
       description: "Get user-facing chat transcript. Does not include special messages (enhanced context) or system messages."
@@ -461,7 +433,7 @@ paths:
         "402":
           $ref: "#/components/responses/DefaultBadStandingResponse"
 
-  /api/v6/character:
+  /api/v7/character:
     get:
       summary: "Get information about a character"
       operationId: "characters.get"
@@ -480,7 +452,6 @@ paths:
             application/json:
               schema:
                 allOf:
-                  - $ref: "#/components/schemas/CharacterIconData"
                   - $ref: "#/components/schemas/CharacterOverview"
                   - type: object
                     required: ["isOfficial"]
@@ -511,14 +482,21 @@ paths:
             schema:
               allOf:
                 - $ref: "#/components/schemas/CharacterOverview"
-                - $ref: "#/components/schemas/CharacterImageData"
                 - type: object
-                  required: ["aiPrompt", "initialResponse", "specialMessages"]
+                  required: ["aiPrompt", "initialResponse", "specialMessages", "banner", "icon"]
                   properties:
                     aiPrompt:
                       type: string
                     initialResponse:
                       type: string
+                    banner:
+                      type: string
+                      description: "base64-encoded AVIF image"
+                      examples: ["AAAAbx"]
+                    icon:
+                      type: string
+                      description: "base64-encoded AVIF image"
+                      examples: ["AAAAbx"]
                     specialMessages:
                       type: array
                       items:
@@ -553,7 +531,7 @@ paths:
         "402":
           $ref: "#/components/responses/DefaultBadStandingResponse"
 
-  /api/v6/message:
+  /api/v7/message:
     post:
       summary: "Send message"
       description: "Send a message to a particular chat for a response"
@@ -673,7 +651,7 @@ components:
         type: string
       examples:
         sampleAccessToken:
-          summary: "Secret string-type token that allows the user to use authenticated API endpoints"
+          summary: "Secret token that allows the user to use authenticated API endpoints"
           value: wcdE8dGPZEshG6B8E5uGpgALr5LzwPX5AqZFKAZsfcvzuHVf
       x-speakeasy-globals-hidden: true
 
@@ -795,38 +773,6 @@ components:
       properties:
         chatId:
           type: integer
-
-    CharacterImageData:
-      allOf:
-        - $ref: "#/components/schemas/CharacterIconData"
-        - $ref: "#/components/schemas/CharacterBannerData"
-
-    CharacterIconData:
-      type: object
-      required: ["iconImage"]
-      properties:
-        iconImage:
-          type: string
-          description: "base64-encoded AVIF image data"
-
-    CharacterBannerData:
-      type: object
-      required: ["bannerImage"]
-      properties:
-        bannerImage:
-          type: string
-          description: "base64-encoded AVIF image data"
-
-    DuplicateCharacterError:
-      title: "Duplicate Character Error Response"
-      allOf:
-        - $ref: "#/components/schemas/FailedRequest"
-        - type: object
-          required: ["error"]
-          properties:
-            error:
-              type: string
-              enum: ["Character with this name already exists"]
 
     Message:
       title: "Messages Response"
