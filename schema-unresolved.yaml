@@ -617,21 +617,45 @@ components:
       content:
         application/json:
           schema:
-            $ref: "#/components/schemas/InvalidRequestResponse"
+            allOf:
+              - $ref: "#/components/schemas/FailedRequest"
+              - type: object
+                description: "One or more request parameters are malformed or invalid"
+                required: ["error"]
+                properties:
+                  error:
+                    type: string
+                    enum: ["One or more API parameters are malformed. Please check your request and try again"]
 
     DefaultUnauthorizedResponse:
       description: "Unauthorized"
       content:
         application/json:
           schema:
-            $ref: "#/components/schemas/AuthenticationFailedResponse"
+            allOf:
+              - $ref: "#/components/schemas/FailedRequest"
+              - type: object
+                description: "The given access token is invalid"
+                required: ["error"]
+                properties:
+                  error:
+                    type: string
+                    enum: ["Invalid username, password, or access token"]
 
     DefaultBadStandingResponse:
       description: "User is not paying for a subscription"
       content:
         application/json:
           schema:
-            $ref: "#/components/schemas/AccountInBadStandingResponse"
+            allOf:
+              - $ref: "#/components/schemas/FailedRequest"
+              - type: object
+                description: "Given user is not allowed to use the API, usually because they don't have an active subscription to our services"
+                required: ["error"]
+                properties:
+                  error:
+                    type: string
+                    enum: ["Account associated with this access token is not subscribed to a paid plan"]
 
   parameters:
     MessageId:
@@ -672,83 +696,6 @@ components:
       example: 8
 
   schemas:
-    UnauthorizedIdResponse:
-      x-speakeasy-name-override: "UnauthorizedIdError"
-      allOf:
-        - $ref: "#/components/schemas/FailedRequest"
-        - type: object
-          description: "Given resource ID does not belong to the given user"
-          required: ["error"]
-          properties:
-            error:
-              type: string
-              enum: ["Chat or message does not belong to this user"]
-
-    DuplicateSignupError:
-      type: object
-      required: ["error"]
-      properties:
-        error:
-          type: string
-          enum: ["Username or email already in use"]
-
-    AccountInBadStandingResponse:
-      title: "Account In Bad Standing Error"
-      x-speakeasy-name-override: "AccountInBadStandingError"
-      allOf:
-        - $ref: "#/components/schemas/FailedRequest"
-        - type: object
-          description: "Given user is not allowed to use the API, usually because they don't have an active subscription to our services"
-          required: ["error"]
-          properties:
-            error:
-              type: string
-              enum: ["Account associated with this access token is not subscribed to a paid plan"]
-
-    AuthenticationFailedResponse:
-      x-speakeasy-name-override: "AuthenticationFailedError"
-      allOf:
-        - $ref: "#/components/schemas/FailedRequest"
-        - type: object
-          description: "The given access token is invalid"
-          required: ["error"]
-          properties:
-            error:
-              type: string
-              enum: ["Invalid username, password, or access token"]
-
-    InvalidRequestResponse:
-      x-speakeasy-name-override: "BadRequestError"
-      allOf:
-        - $ref: "#/components/schemas/FailedRequest"
-        - type: object
-          description: "One or more request parameters are malformed or invalid"
-          required: ["error"]
-          properties:
-            error:
-              type: string
-              enum: ["One or more API parameters are malformed. Please check your request and try again"]
-
-    InvalidMessageId:
-      x-speakeasy-name-override: "InvalidMessageIdError"
-      allOf:
-        - $ref: "#/components/schemas/FailedRequest"
-        - type: object
-          required: ["error"]
-          properties:
-            error:
-              type: string
-              enum: ["Invalid message ID"]
-
-    InvalidChatId:
-      x-speakeasy-name-override: "InvalidChatIdError"
-      type: object
-      required: ["error"]
-      properties:
-        error:
-          type: string
-          enum: ["Invalid chat ID"]
-
     AccessTokenResponse:
       x-speakeasy-name-override: "AccessTokenObj"
       allOf:
