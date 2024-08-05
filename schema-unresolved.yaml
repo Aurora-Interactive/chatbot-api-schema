@@ -1,6 +1,6 @@
 openapi: 3.1.0
 info:
-  version: 7.0.0
+  version: 7.1.0
   title: "Aurora AI Chat REST API"
   description: "REST API used in storing and executing AI chat completions in a personalized and conversational manner. It comes with support for streaming chat responses."
   contact:
@@ -84,7 +84,9 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/UserInfo"
+                allOf:
+                  - $ref: "#/components/schemas/SuccessfulRequest"
+                  - $ref: "#/components/schemas/UserInfo"
 
         "401":
           $ref: "#/components/responses/DefaultUnauthorizedResponse"
@@ -103,7 +105,13 @@ paths:
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/UserInfo"
+              allOf:
+                - $ref: "#/components/schemas/UserInfo"
+                - type: object
+                  required: ["password"]
+                  properties:
+                    password:
+                      type: string
 
       responses:
         "200":
