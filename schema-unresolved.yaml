@@ -1,6 +1,6 @@
 openapi: 3.1.0
 info:
-  version: 7.2.0
+  version: 7.3.0
   title: "Aurora AI Chat REST API"
   description: "REST API used in storing and executing AI chat completions in a personalized and conversational manner. It comes with support for streaming chat responses."
   contact:
@@ -528,6 +528,63 @@ paths:
                   - $ref: "#/components/schemas/SuccessfulRequest"
                   - $ref: "#/components/schemas/CharacterId"
 
+        "400":
+          $ref: "#/components/responses/DefaultBadRequest"
+
+        "401":
+          $ref: "#/components/responses/DefaultUnauthorizedResponse"
+
+        "402":
+          $ref: "#/components/responses/DefaultBadStandingResponse"
+
+  /api/v7/messages:
+    get:
+      summary: "Get a certain number of messages from the message history"
+      x-speakeasy-usage-example: true
+      operationId: "messages.getMany"
+      x-speakeasy-group: "messages"
+      x-speakeasy-name-override: "getMany"
+      tags:
+        - Messages
+      parameters:
+        - $ref: "#/components/parameters/AccessToken"
+        - name: "numMessages"
+          in: query
+          required: true
+          schema:
+            type: integer
+          example: 10
+        - name: "from"
+          in: query
+          description: "Message ID to start results from (useful in pagination)"
+          required: false
+          schema:
+            type: integer
+          example: 150
+
+      responses:
+        "200":
+          description: "An array of messages that are part of the message history and an indicator of whether there are more messages left."
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: "#/components/schemas/SuccessfulRequest"
+                  - type: object
+                    required: ["messages", "endOfList"]
+                    properties:
+                      messages:
+                        type: array
+                        items:
+                          allOf:
+                            - $ref: "#/components/schemas/TimestampedMessage"
+                            - type: object
+                              required: ["id"]
+                              properties:
+                                id:
+                                  type: integer
+                      endOfList:
+                        type: boolean
         "400":
           $ref: "#/components/responses/DefaultBadRequest"
 
