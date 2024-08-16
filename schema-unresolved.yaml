@@ -548,6 +548,7 @@ paths:
         - Messages
       parameters:
         - $ref: "#/components/parameters/AccessToken"
+        - $ref: "#/components/parameters/ChatId"
         - name: "numMessages"
           in: query
           required: true
