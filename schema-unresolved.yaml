@@ -1,6 +1,6 @@
 openapi: 3.1.0
 info:
-  version: 8.0.0
+  version: 9.0.0
   title: "Aurora AI Chat REST API"
   description: "REST API used in storing and executing AI chat completions in a personalized and conversational manner. It comes with support for streaming chat responses."
   contact:
@@ -31,7 +31,7 @@ paths:
     statusCodes:
       - 5XX
 
-  /api/v8/login:
+  /api/v9/login:
     post:
       summary: "Login"
       description: "Login and retrieve an access token for use with the API"
@@ -66,7 +66,7 @@ paths:
         "401":
           $ref: "#/components/responses/DefaultUnauthorizedResponse"
 
-  /api/v8/user/info:
+  /api/v9/user/info:
     get:
       summary: "Get User Info"
       description: "Get personal account metadata. Useful for pre-filling update fields for when the user wants to update account data"
@@ -127,7 +127,7 @@ paths:
         "401":
           $ref: "#/components/responses/DefaultUnauthorizedResponse"
 
-  /api/v8/signup:
+  /api/v9/signup:
     post:
       summary: "User signup"
       description: "Create an account"
@@ -160,7 +160,7 @@ paths:
         "400":
           $ref: "#/components/responses/DefaultBadRequest"
 
-  /api/v8/characters:
+  /api/v9/characters:
     get:
       summary: "Character metadata"
       description: "Get data for available characters in the system. Paginated. Up to 100 characters per request"
@@ -218,7 +218,7 @@ paths:
         "401":
           $ref: "#/components/responses/DefaultUnauthorizedResponse"
 
-  /api/v8/chats:
+  /api/v9/chats:
     get:
       summary: "Get all chats assigned to a user"
       description: "Get chat IDs assigned to a user ID"
@@ -255,10 +255,7 @@ paths:
         "401":
           $ref: "#/components/responses/DefaultUnauthorizedResponse"
 
-        "402":
-          $ref: "#/components/responses/DefaultBadStandingResponse"
-
-  /api/v8/chat/preview:
+  /api/v9/chat/preview:
     get:
       summary: "Get the latest message from the given chat"
       operationId: "chats.preview"
@@ -289,10 +286,7 @@ paths:
         "401":
           $ref: "#/components/responses/DefaultUnauthorizedResponse"
 
-        "402":
-          $ref: "#/components/responses/DefaultBadStandingResponse"
-
-  /api/v8/chat:
+  /api/v9/chat:
     post:
       summary: "Initialize chat with AI character"
       description: "Initialize a chat with a given AI character, including storing the character's initial response as a message in our system."
@@ -326,9 +320,6 @@ paths:
         "401":
           $ref: "#/components/responses/DefaultUnauthorizedResponse"
 
-        "402":
-          $ref: "#/components/responses/DefaultBadStandingResponse"
-
     delete:
       summary: "Delete a chat"
       description: "Delete a chat by ID. All messages in the chat are also deleted."
@@ -356,7 +347,7 @@ paths:
         "401":
           $ref: "#/components/responses/DefaultUnauthorizedResponse"
 
-  /api/v8/message/save:
+  /api/v9/message/save:
     post:
       summary: "Save chat message"
       description: "Save chat message after AI response"
@@ -396,13 +387,10 @@ paths:
         "401":
           $ref: "#/components/responses/DefaultUnauthorizedResponse"
 
-        "402":
-          $ref: "#/components/responses/DefaultBadStandingResponse"
-
         "429":
           $ref: "#/components/responses/DefaultMessageQuotaExceeded"
 
-  /api/v8/character:
+  /api/v9/character:
     get:
       summary: "Get information about a character"
       operationId: "characters.get"
@@ -496,10 +484,7 @@ paths:
         "401":
           $ref: "#/components/responses/DefaultUnauthorizedResponse"
 
-        "402":
-          $ref: "#/components/responses/DefaultBadStandingResponse"
-
-  /api/v8/messages:
+  /api/v9/messages:
     get:
       summary: "Get a certain number of messages from the message history, up to 100 per request."
       x-speakeasy-usage-example: true
@@ -554,10 +539,7 @@ paths:
         "401":
           $ref: "#/components/responses/DefaultUnauthorizedResponse"
 
-        "402":
-          $ref: "#/components/responses/DefaultBadStandingResponse"
-
-  /api/v8/message:
+  /api/v9/message:
     post:
       summary: "Send message"
       description: "Send a message to a particular chat for a response"
@@ -596,9 +578,6 @@ paths:
         "401":
           $ref: "#/components/responses/DefaultUnauthorizedResponse"
 
-        "402":
-          $ref: "#/components/responses/DefaultBadStandingResponse"
-
         "429":
           $ref: "#/components/responses/DefaultMessageQuotaExceeded"
 
@@ -627,9 +606,6 @@ paths:
 
         "401":
           $ref: "#/components/responses/DefaultUnauthorizedResponse"
-
-        "402":
-          $ref: "#/components/responses/DefaultBadStandingResponse"
 
 components:
   responses:
@@ -662,21 +638,6 @@ components:
                   error:
                     type: string
                     enum: ["Invalid username, password, or access token"]
-
-    DefaultBadStandingResponse:
-      description: "User is not paying for a subscription"
-      content:
-        application/json:
-          schema:
-            allOf:
-              - $ref: "#/components/schemas/FailedRequest"
-              - type: object
-                description: "Given user is not allowed to use the API, usually because they don't have an active subscription to our services"
-                required: ["error"]
-                properties:
-                  error:
-                    type: string
-                    enum: ["Account associated with this access token is not subscribed to a paid plan"]
 
     DefaultMessageQuotaExceeded:
       description: "User exceeded the message limit for their current plan"
