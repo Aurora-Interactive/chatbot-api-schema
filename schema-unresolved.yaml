@@ -1,6 +1,6 @@
 openapi: 3.1.0
 info:
-  version: 9.0.0
+  version: 9.1.0
   title: "Aurora AI Chat REST API"
   description: "REST API used in storing and executing AI chat completions in a personalized and conversational manner. It comes with support for streaming chat responses."
   contact:
@@ -126,6 +126,35 @@ paths:
 
         "401":
           $ref: "#/components/responses/DefaultUnauthorizedResponse"
+
+  /api/v9/user/quota:
+    get:
+      summary: "Quota and plan info"
+      description: "Get information related to the user's subscription quota and plan details."
+      operationId: "users.quota"
+      x-speakeasy-group: "users"
+      x-speakeasy-name-override: "quota"
+      tags: ["Users"]
+      parameters:
+        - $ref: "#/components/parameters/AccessToken"
+      
+      responses:
+        "200":
+          description: "User info"
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: "#/components/schemas/SuccessfulRequest"
+                  - type: object
+                    required: ["quotaUsed", "quotaMax", "planName"]
+                    properties:
+                      quotaUsed:
+                        type: integer
+                      quotaMax:
+                        type: integer
+                      planName:
+                        type: string
 
   /api/v9/signup:
     post:
