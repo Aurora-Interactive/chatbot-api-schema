@@ -1,6 +1,6 @@
 openapi: 3.1.0
 info:
-  version: 9.1.0
+  version: 9.2.0
   title: "Aurora AI Chat REST API"
   description: "REST API used in storing and executing AI chat completions in a personalized and conversational manner. It comes with support for streaming chat responses."
   contact:
@@ -66,6 +66,9 @@ paths:
         "401":
           $ref: "#/components/responses/DefaultUnauthorizedResponse"
 
+        "429":
+          $ref: "#/components/responses/RateLimitReachedError"
+
   /api/v9/user/info:
     get:
       summary: "Get User Info"
@@ -90,6 +93,9 @@ paths:
 
         "401":
           $ref: "#/components/responses/DefaultUnauthorizedResponse"
+
+        "429":
+          $ref: "#/components/responses/RateLimitReachedError"
 
     put:
       summary: "Update account information"
@@ -126,6 +132,9 @@ paths:
 
         "401":
           $ref: "#/components/responses/DefaultUnauthorizedResponse"
+
+        "429":
+          $ref: "#/components/responses/RateLimitReachedError"
 
   /api/v9/user/quota:
     get:
@@ -189,6 +198,9 @@ paths:
         "400":
           $ref: "#/components/responses/DefaultBadRequest"
 
+        "429":
+          $ref: "#/components/responses/RateLimitReachedError"
+
   /api/v9/characters:
     get:
       summary: "Character metadata"
@@ -247,6 +259,9 @@ paths:
         "401":
           $ref: "#/components/responses/DefaultUnauthorizedResponse"
 
+        "429":
+          $ref: "#/components/responses/RateLimitReachedError"
+
   /api/v9/chats:
     get:
       summary: "Get all chats assigned to a user"
@@ -284,6 +299,9 @@ paths:
         "401":
           $ref: "#/components/responses/DefaultUnauthorizedResponse"
 
+        "429":
+          $ref: "#/components/responses/RateLimitReachedError"
+
   /api/v9/chat/preview:
     get:
       summary: "Get the latest message from the given chat"
@@ -314,6 +332,9 @@ paths:
 
         "401":
           $ref: "#/components/responses/DefaultUnauthorizedResponse"
+
+        "429":
+          $ref: "#/components/responses/RateLimitReachedError"
 
   /api/v9/chat:
     post:
@@ -349,6 +370,9 @@ paths:
         "401":
           $ref: "#/components/responses/DefaultUnauthorizedResponse"
 
+        "429":
+          $ref: "#/components/responses/RateLimitReachedError"
+
     delete:
       summary: "Delete a chat"
       description: "Delete a chat by ID. All messages in the chat are also deleted."
@@ -375,6 +399,9 @@ paths:
 
         "401":
           $ref: "#/components/responses/DefaultUnauthorizedResponse"
+
+        "429":
+          $ref: "#/components/responses/RateLimitReachedError"
 
   /api/v9/message/save:
     post:
@@ -417,7 +444,7 @@ paths:
           $ref: "#/components/responses/DefaultUnauthorizedResponse"
 
         "429":
-          $ref: "#/components/responses/DefaultMessageQuotaExceeded"
+          $ref: "#/components/responses/RateLimitReachedError"
 
   /api/v9/character:
     get:
@@ -449,6 +476,9 @@ paths:
 
         "401":
           $ref: "#/components/responses/DefaultUnauthorizedResponse"
+
+        "429":
+          $ref: "#/components/responses/RateLimitReachedError"
 
     post:
       summary: "Create character"
@@ -513,6 +543,9 @@ paths:
         "401":
           $ref: "#/components/responses/DefaultUnauthorizedResponse"
 
+        "429":
+          $ref: "#/components/responses/RateLimitReachedError"
+
   /api/v9/messages:
     get:
       summary: "Get a certain number of messages from the message history, up to 100 per request."
@@ -568,6 +601,9 @@ paths:
         "401":
           $ref: "#/components/responses/DefaultUnauthorizedResponse"
 
+        "429":
+          $ref: "#/components/responses/RateLimitReachedError"
+
   /api/v9/message:
     post:
       summary: "Send message"
@@ -608,7 +644,7 @@ paths:
           $ref: "#/components/responses/DefaultUnauthorizedResponse"
 
         "429":
-          $ref: "#/components/responses/DefaultMessageQuotaExceeded"
+          $ref: "#/components/responses/RateLimitReachedError"
 
     delete:
       summary: "Delete message"
@@ -635,6 +671,9 @@ paths:
 
         "401":
           $ref: "#/components/responses/DefaultUnauthorizedResponse"
+
+        "429":
+          $ref: "#/components/responses/RateLimitReachedError"
 
 components:
   responses:
@@ -668,20 +707,31 @@ components:
                     type: string
                     enum: ["Invalid username, password, or access token"]
 
-    DefaultMessageQuotaExceeded:
+    RateLimitReachedError:
       description: "User exceeded the message limit for their current plan"
       content:
         application/json:
           schema:
-            allOf:
-              - $ref: "#/components/schemas/FailedRequest"
+            oneOf:
+              - allOf:
+                - $ref: "#/components/schemas/FailedRequest"
+                - type: object
+                  description: ""
+                  required: ["error"]
+                  properties:
+                    error:
+                      type: string
+                      enum: ["You have exceeded your message quota. To send more messages, please upgrade your plan or wait until your subscription renews."]
               - type: object
+                required: ["statusCode", "error", "message"]
                 description: ""
-                required: ["error"]
                 properties:
+                  statusCode:
+                    type: integer
                   error:
                     type: string
-                    enum: ["You have exceeded your message quota. To send more messages, please upgrade your plan or wait until your subscription renews."]
+                  message:
+                    type: string
 
   parameters:
     MessageId:
