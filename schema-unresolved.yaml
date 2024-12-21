@@ -1,6 +1,6 @@
 openapi: 3.1.0
 info:
-  version: 9.2.0
+  version: 9.3.0
   title: "Aurora AI Chat REST API"
   description: "REST API used in storing and executing AI chat completions in a personalized and conversational manner. It comes with support for streaming chat responses."
   contact:
@@ -157,7 +157,7 @@ paths:
                 allOf:
                   - $ref: "#/components/schemas/SuccessfulRequest"
                   - type: object
-                    required: ["quotaUsed", "quotaMax", "planName"]
+                    required: ["quotaUsed", "quotaMax", "planName", "isChristy"]
                     properties:
                       quotaUsed:
                         type: integer
@@ -165,6 +165,8 @@ paths:
                         type: integer
                       planName:
                         type: string
+                      isChristy:
+                        type: boolean
 
   /api/v9/signup:
     post:
