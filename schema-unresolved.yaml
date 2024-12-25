@@ -1,6 +1,6 @@
 openapi: 3.1.0
 info:
-  version: 9.3.0
+  version: 10.0.0
   title: "Aurora AI Chat REST API"
   description: "REST API used in storing and executing AI chat completions in a personalized and conversational manner. It comes with support for streaming chat responses."
   contact:
@@ -246,9 +246,11 @@ paths:
                           allOf:
                             - $ref: "#/components/schemas/CharacterOverview"
                             - type: object
-                              required: ["isOfficial", "id"]
+                              required: ["isOfficial", "isPrivate", "id"]
                               properties:
                                 isOfficial:
+                                  type: boolean
+                                isPrivate:
                                   type: boolean
                                 id:
                                   type: integer
@@ -469,9 +471,11 @@ paths:
                 allOf:
                   - $ref: "#/components/schemas/CharacterOverview"
                   - type: object
-                    required: ["isOfficial"]
+                    required: ["isOfficial", "isPrivate"]
                     properties:
                       isOfficial:
+                        type: boolean
+                      isPrivate:
                         type: boolean
 
         "400":
@@ -482,6 +486,9 @@ paths:
 
         "429":
           $ref: "#/components/responses/RateLimitReachedError"
+
+        "403":
+          $ref: "#/components/responses/PrivateCharacterError"
 
     post:
       summary: "Create character"
@@ -501,7 +508,7 @@ paths:
               allOf:
                 - $ref: "#/components/schemas/CharacterOverview"
                 - type: object
-                  required: ["aiPrompt", "initialResponse", "specialMessages", "banner", "icon"]
+                  required: ["aiPrompt", "initialResponse", "specialMessages", "banner", "icon", "isPrivate"]
                   properties:
                     aiPrompt:
                       type: string
@@ -515,6 +522,8 @@ paths:
                       type: string
                       description: "base64-encoded AVIF image"
                       examples: ["AAAAbx"]
+                    isPrivate:
+                      type: boolean
                     specialMessages:
                       type: array
                       items:
@@ -735,6 +744,18 @@ components:
                     type: string
                   message:
                     type: string
+
+    PrivateCharacterError:
+      description: "The character the user is querying for is private the querying user is not creator"
+      content:
+        application/json:
+          schema:
+            type: object
+            required: ["error"]
+            properties:
+              error:
+                type: string
+                enum: ["This character is private and you are not the creator"]
 
   parameters:
     MessageId:
