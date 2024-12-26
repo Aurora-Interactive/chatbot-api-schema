@@ -1,6 +1,6 @@
 openapi: 3.1.0
 info:
-  version: 9.3.0
+  version: 10.0.1
   title: "Aurora AI Chat REST API"
   description: "REST API used in storing and executing AI chat completions in a personalized and conversational manner. It comes with support for streaming chat responses."
   contact:
@@ -32,7 +32,7 @@ paths:
     statusCodes:
       - 5XX
 
-  /api/v9/login:
+  /api/v10/login:
     post:
       summary: "Login"
       description: "Login and retrieve an access token for use with the API"
@@ -70,7 +70,7 @@ paths:
         "429":
           $ref: "#/components/responses/RateLimitReachedError"
 
-  /api/v9/user/info:
+  /api/v10/user/info:
     get:
       summary: "Get User Info"
       description: "Get personal account metadata. Useful for pre-filling update fields for when the user wants to update account data"
@@ -137,7 +137,7 @@ paths:
         "429":
           $ref: "#/components/responses/RateLimitReachedError"
 
-  /api/v9/user/quota:
+  /api/v10/user/quota:
     get:
       summary: "Quota and plan info"
       description: "Get information related to the user's subscription quota and plan details."
@@ -168,7 +168,7 @@ paths:
                       isChristy:
                         type: boolean
 
-  /api/v9/signup:
+  /api/v10/signup:
     post:
       summary: "User signup"
       description: "Create an account"
@@ -204,7 +204,7 @@ paths:
         "429":
           $ref: "#/components/responses/RateLimitReachedError"
 
-  /api/v9/characters:
+  /api/v10/characters:
     get:
       summary: "Character metadata"
       description: "Get data for available characters in the system. Paginated. Up to 100 characters per request"
@@ -228,6 +228,7 @@ paths:
           schema:
             type: integer
           example: 150
+        - $ref: "#/components/parameters/OptionalAccessToken"
 
       responses:
         "200":
@@ -246,9 +247,11 @@ paths:
                           allOf:
                             - $ref: "#/components/schemas/CharacterOverview"
                             - type: object
-                              required: ["isOfficial", "id"]
+                              required: ["isOfficial", "isPrivate", "id"]
                               properties:
                                 isOfficial:
+                                  type: boolean
+                                isPrivate:
                                   type: boolean
                                 id:
                                   type: integer
@@ -265,7 +268,7 @@ paths:
         "429":
           $ref: "#/components/responses/RateLimitReachedError"
 
-  /api/v9/chats:
+  /api/v10/chats:
     get:
       summary: "Get all chats assigned to a user"
       description: "Get chat IDs assigned to a user ID"
@@ -305,7 +308,7 @@ paths:
         "429":
           $ref: "#/components/responses/RateLimitReachedError"
 
-  /api/v9/chat/preview:
+  /api/v10/chat/preview:
     get:
       summary: "Get the latest message from the given chat"
       operationId: "chats.preview"
@@ -339,7 +342,7 @@ paths:
         "429":
           $ref: "#/components/responses/RateLimitReachedError"
 
-  /api/v9/chat:
+  /api/v10/chat:
     post:
       summary: "Initialize chat with AI character"
       description: "Initialize a chat with a given AI character, including storing the character's initial response as a message in our system."
@@ -406,7 +409,7 @@ paths:
         "429":
           $ref: "#/components/responses/RateLimitReachedError"
 
-  /api/v9/message/save:
+  /api/v10/message/save:
     post:
       summary: "Save chat message"
       description: "Save chat message after AI response"
@@ -449,7 +452,7 @@ paths:
         "429":
           $ref: "#/components/responses/RateLimitReachedError"
 
-  /api/v9/character:
+  /api/v10/character:
     get:
       summary: "Get information about a character"
       operationId: "characters.get"
@@ -459,6 +462,7 @@ paths:
         - Characters
       parameters:
         - $ref: "#/components/parameters/CharacterId"
+        - $ref: "#/components/parameters/OptionalAccessToken"
       
       responses:
         "200":
@@ -469,9 +473,11 @@ paths:
                 allOf:
                   - $ref: "#/components/schemas/CharacterOverview"
                   - type: object
-                    required: ["isOfficial"]
+                    required: ["isOfficial", "isPrivate"]
                     properties:
                       isOfficial:
+                        type: boolean
+                      isPrivate:
                         type: boolean
 
         "400":
@@ -482,6 +488,9 @@ paths:
 
         "429":
           $ref: "#/components/responses/RateLimitReachedError"
+
+        "403":
+          $ref: "#/components/responses/PrivateCharacterError"
 
     post:
       summary: "Create character"
@@ -501,7 +510,7 @@ paths:
               allOf:
                 - $ref: "#/components/schemas/CharacterOverview"
                 - type: object
-                  required: ["aiPrompt", "initialResponse", "specialMessages", "banner", "icon"]
+                  required: ["aiPrompt", "initialResponse", "specialMessages", "banner", "icon", "isPrivate"]
                   properties:
                     aiPrompt:
                       type: string
@@ -515,6 +524,8 @@ paths:
                       type: string
                       description: "base64-encoded AVIF image"
                       examples: ["AAAAbx"]
+                    isPrivate:
+                      type: boolean
                     specialMessages:
                       type: array
                       items:
@@ -549,7 +560,7 @@ paths:
         "429":
           $ref: "#/components/responses/RateLimitReachedError"
 
-  /api/v9/messages:
+  /api/v10/messages:
     get:
       summary: "Get a certain number of messages from the message history, up to 100 per request."
       x-speakeasy-usage-example: true
@@ -607,7 +618,7 @@ paths:
         "429":
           $ref: "#/components/responses/RateLimitReachedError"
 
-  /api/v9/message:
+  /api/v10/message:
     post:
       summary: "Send message"
       description: "Send a message to a particular chat for a response"
@@ -736,6 +747,18 @@ components:
                   message:
                     type: string
 
+    PrivateCharacterError:
+      description: "The character the user is querying for is private the querying user is not creator"
+      content:
+        application/json:
+          schema:
+            type: object
+            required: ["error"]
+            properties:
+              error:
+                type: string
+                enum: ["This character is private and you are not the creator"]
+
   parameters:
     MessageId:
       name: "messageId"
@@ -752,6 +775,19 @@ components:
       schema:
         type: integer
       example: 8
+
+    OptionalAccessToken:
+      name: "x-access-token"
+      x-speakeasy-name-override: "accessToken"
+      in: header
+      required: false
+      schema:
+        type: string
+      examples:
+        sampleAccessToken:
+          summary: "Secret token that allows the user to use authenticated API endpoints (Optional)"
+          value: wcdE8dGPZEshG6B8E5uGpgALr5LzwPX5AqZFKAZsfcvzuHVf
+      x-speakeasy-globals-hidden: true
 
     AccessToken:
       name: "x-access-token"
