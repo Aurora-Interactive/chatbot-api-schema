@@ -1,6 +1,6 @@
 openapi: 3.1.0
 info:
-  version: 10.0.1
+  version: 11.0.0
   title: "Aurora AI Chat REST API"
   description: "REST API used in storing and executing AI chat completions in a personalized and conversational manner. It comes with support for streaming chat responses."
   contact:
@@ -32,7 +32,7 @@ paths:
     statusCodes:
       - 5XX
 
-  /api/v10/login:
+  /api/v11/login:
     post:
       summary: "Login"
       description: "Login and retrieve an access token for use with the API"
@@ -70,7 +70,7 @@ paths:
         "429":
           $ref: "#/components/responses/RateLimitReachedError"
 
-  /api/v10/user/info:
+  /api/v11/user/info:
     get:
       summary: "Get User Info"
       description: "Get personal account metadata. Useful for pre-filling update fields for when the user wants to update account data"
@@ -137,7 +137,7 @@ paths:
         "429":
           $ref: "#/components/responses/RateLimitReachedError"
 
-  /api/v10/user/quota:
+  /api/v11/user/quota:
     get:
       summary: "Quota and plan info"
       description: "Get information related to the user's subscription quota and plan details."
@@ -168,7 +168,7 @@ paths:
                       isChristy:
                         type: boolean
 
-  /api/v10/signup:
+  /api/v11/signup:
     post:
       summary: "User signup"
       description: "Create an account"
@@ -204,7 +204,7 @@ paths:
         "429":
           $ref: "#/components/responses/RateLimitReachedError"
 
-  /api/v10/characters:
+  /api/v11/characters:
     get:
       summary: "Character metadata"
       description: "Get data for available characters in the system. Paginated. Up to 100 characters per request"
@@ -268,7 +268,7 @@ paths:
         "429":
           $ref: "#/components/responses/RateLimitReachedError"
 
-  /api/v10/chats:
+  /api/v11/chats:
     get:
       summary: "Get all chats assigned to a user"
       description: "Get chat IDs assigned to a user ID"
@@ -308,7 +308,7 @@ paths:
         "429":
           $ref: "#/components/responses/RateLimitReachedError"
 
-  /api/v10/chat/preview:
+  /api/v11/chat/preview:
     get:
       summary: "Get the latest message from the given chat"
       operationId: "chats.preview"
@@ -342,7 +342,7 @@ paths:
         "429":
           $ref: "#/components/responses/RateLimitReachedError"
 
-  /api/v10/chat:
+  /api/v11/chat:
     post:
       summary: "Initialize chat with AI character"
       description: "Initialize a chat with a given AI character, including storing the character's initial response as a message in our system."
@@ -409,7 +409,7 @@ paths:
         "429":
           $ref: "#/components/responses/RateLimitReachedError"
 
-  /api/v10/message/save:
+  /api/v11/message/save:
     post:
       summary: "Save chat message"
       description: "Save chat message after AI response"
@@ -452,7 +452,7 @@ paths:
         "429":
           $ref: "#/components/responses/RateLimitReachedError"
 
-  /api/v10/character:
+  /api/v11/character:
     get:
       summary: "Get information about a character"
       operationId: "characters.get"
@@ -560,7 +560,7 @@ paths:
         "429":
           $ref: "#/components/responses/RateLimitReachedError"
 
-  /api/v10/messages:
+  /api/v11/messages:
     get:
       summary: "Get a certain number of messages from the message history, up to 100 per request."
       x-speakeasy-usage-example: true
@@ -618,7 +618,7 @@ paths:
         "429":
           $ref: "#/components/responses/RateLimitReachedError"
 
-  /api/v10/message:
+  /api/v11/message:
     post:
       summary: "Send message"
       description: "Send a message to a particular chat for a response"
@@ -689,6 +689,87 @@ paths:
         "429":
           $ref: "#/components/responses/RateLimitReachedError"
 
+  /api/v11/tts:
+    post:
+      summary: "Generate text-to-speech for a given message"
+      description: "Given a message ID, generate a WAV file using our text-to-speech model according to the user's set preference for TTS character. This is most useful for AI character text responses."
+      operationId: "tts.execute"
+      x-speakeasy-group: "tts"
+      x-speakeasy-name-override: "execute"
+      tags:
+        - Messages
+
+      parameters:
+        - $ref: "#/components/parameters/AccessToken"
+
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              required: ["messageId"]
+              properties:
+                messageId:
+                  type: integer
+
+      responses:
+        "200":
+          description: "text-to-speech generation completed successfully."
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: "#/components/schemas/SuccessfulRequest"
+                  - type: object
+                    required: ["generationId"]
+                    properties:
+                      generationId:
+                        type: integer
+
+        "400":
+          $ref: "#/components/responses/DefaultBadRequest"
+
+        "401":
+          $ref: "#/components/responses/DefaultUnauthorizedResponse"
+
+        "429":
+          $ref: "#/components/responses/RateLimitReachedError"
+
+    get:
+      summary: "Retrieve text-to-speech generation"
+      description: "Retrieve the WAV audio data generated after a successful call to `POST /tts`"
+      operationId: "tts.retrieve"
+      x-speakeasy-group: "tts"
+      x-speakeasy-name-override: "retrieve"
+      tags:
+        - Messages
+
+      parameters:
+        - $ref: "#/components/parameters/AccessToken"
+        - name: "ttsGenerationId"
+          in: query
+          required: true
+          schema:
+            type: integer
+
+      responses:
+        "200":
+          description: "raw WAV file data from the succcessful text-to-speech generation."
+          content:
+            audio/x-wav:
+              schema:
+                type: string
+                format: binary
+
+        "400":
+          $ref: "#/components/responses/DefaultBadRequest"
+
+        "401":
+          $ref: "#/components/responses/DefaultUnauthorizedResponse"
+
+        "429":
+          $ref: "#/components/responses/RateLimitReachedError"
+
 components:
   responses:
     DefaultBadRequest:
@@ -735,7 +816,7 @@ components:
                   properties:
                     error:
                       type: string
-                      enum: ["You have exceeded your message quota. To send more messages, please upgrade your plan or wait until your subscription renews."]
+                      enum: ["You have exceeded your Message/TTS quota. To send more messages, please upgrade your plan or wait until your subscription renews."]
               - type: object
                 required: ["statusCode", "error", "message"]
                 description: ""
@@ -896,12 +977,14 @@ components:
 
     UserInfo:
       type: object
-      required: ["username", "email"]
+      required: ["username", "email", "preferredTtsCharacter"]
       properties:
         username:
           type: string
         email:
           type: string
+        preferredTtsCharacter:
+          type: integer
 
 tags:
   - name: "Characters"
