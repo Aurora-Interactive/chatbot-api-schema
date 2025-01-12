@@ -1,6 +1,6 @@
 openapi: 3.1.0
 info:
-  version: 11.1.0
+  version: 11.1.1
   title: "Aurora AI Chat REST API"
   description: "REST API used in storing and executing AI chat completions in a personalized and conversational manner. It comes with support for streaming chat responses."
   contact:
@@ -760,7 +760,7 @@ paths:
         "200":
           description: "raw WAV file data from the succcessful text-to-speech generation."
           content:
-            audio/x-wav:
+            application/octet-stream:
               schema:
                 type: string
                 format: binary
