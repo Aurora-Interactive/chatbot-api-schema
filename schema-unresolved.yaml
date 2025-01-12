@@ -977,7 +977,7 @@ components:
 
     UserInfo:
       type: object
-      required: ["username", "email", "preferredTtsCharacter"]
+      required: ["username", "email"]
       properties:
         username:
           type: string
