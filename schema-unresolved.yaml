@@ -1,6 +1,6 @@
 openapi: 3.1.0
 info:
-  version: 11.1.1
+  version: 11.2.0
   title: "Aurora AI Chat REST API"
   description: "REST API used in storing and executing AI chat completions in a personalized and conversational manner. It comes with support for streaming chat responses."
   contact:
@@ -722,13 +722,7 @@ paths:
           content:
             application/json:
               schema:
-                allOf:
-                  - $ref: "#/components/schemas/SuccessfulRequest"
-                  - type: object
-                    required: ["generationId"]
-                    properties:
-                      generationId:
-                        type: integer
+                $ref: "#/components/schemas/SuccessfulRequest"
 
         "400":
           $ref: "#/components/responses/DefaultBadRequest"
@@ -750,7 +744,7 @@ paths:
 
       parameters:
         - $ref: "#/components/parameters/AccessToken"
-        - name: "ttsGenerationId"
+        - name: "ttsMessageFor"
           in: query
           required: true
           schema:
