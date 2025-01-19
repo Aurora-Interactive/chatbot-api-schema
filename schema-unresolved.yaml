@@ -977,12 +977,14 @@ components:
 
     UserInfo:
       type: object
-      required: ["username", "email"]
+      required: ["username", "email", "autoExecuteTts"]
       properties:
         username:
           type: string
         email:
           type: string
+        autoExecuteTts:
+          type: boolean
 
 tags:
   - name: "Characters"
